@@ -1,0 +1,40 @@
+/src
+  /app
+    /core
+      - registry.service.ts    (Gère les types de nodes)
+      - orchestrator.component.ts (La boucle principale)
+    /renderers
+      - math-node.component.ts
+      - code-node.component.ts
+      - sandbox-node.component.ts (Avec Shadow DOM)
+    /services
+      - stream-parser.service.ts (Parse le JSON chunk par chunk)
+      - agent-bridge.service.ts  (Communique avec ton backend LLM)
+  /assets
+    /mocks
+      - course-1.json
+      - course-2.json
+
+#### 2. Le Mega-Prompt pour Replit Agent
+Copie-colle ce prompt pour générer la version industrielle de ta librairie :
+
+> **Objet : Développement d'un Content Player Angular pour LMS Agentique**
+>
+> "Je souhaite développer une librairie Angular capable de rendre un flux JSON granulaire provenant d'un LLM. 
+> 
+> **Contraintes Techniques Majeures :**
+> 1. **Data Format :** Le player reçoit une interface `Slide` contenant un tableau de `SlideNode`. Chaque node a un `id`, un `type` et un `content`.
+> 2. **Modularité :** Implémente un `RegistryService`. Le composant principal `SmartPlayer` doit utiliser `ngComponentOutlet` pour instancier le bon composant de rendu selon le `type` (text, math, code, diagram, interactive-sandbox).
+> 3. **Isolation (Shadow DOM) :** Pour le type 'interactive-sandbox', crée un composant qui utilise `ViewEncapsulation.ShadowDom`. Il doit injecter dynamiquement du HTML et du CSS reçu, et exécuter le JS de manière isolée.
+> 4. **Paufinage Granulaire :** Prévoyez une fonction `refineNode(nodeId)` qui permet d'envoyer uniquement le contenu d'un bloc spécifique à un agent LLM pour modification, puis de mettre à jour ce bloc via un Signal Angular.
+> 5. **Librairies Externes :** Intègre les stubs pour **KaTeX** (Maths) et **Mermaid.js** (Schémas). Pour le code, utilise **Highlight.js**.
+> 6. **Testing Playground :** Crée un environnement de test dans l'application permettant de charger des fichiers JSON statiques (ex: 'math-lesson.json', 'history-interactive.json') pour visualiser le rendu sans appeler d'API réelle.
+> 7. **UI/UX :** Le design doit être ultra-moderne (style Gemini/Notion), avec des animations d'entrée pour chaque node et un support du mode sombre automatique."
+
+### Comment tester sans LLM ?
+Dans le code que je t'ai fourni ci-dessus, j'ai inclus un objet `MOCK_SCENARIOS`. 
+- Tu peux simplement ajouter de nouveaux objets dans ce dictionnaire.
+- Chaque objet simule exactement ce qu'un LLM renverrait.
+- Cela te permet de valider ton design CSS et tes calculs LaTeX/Mermaid avant même d'avoir fini de configurer tes agents.
+
+Une fois que tu as validé le rendu avec ces fichiers statiques, il ne te reste plus qu'à remplacer la source de données par ton API d'agents !
