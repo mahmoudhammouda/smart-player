@@ -1,18 +1,42 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+export const nodeTypeSchema = z.enum([
+  "text",
+  "math",
+  "code",
+  "diagram",
+  "interactive-sandbox",
+]);
+
+export type NodeType = z.infer<typeof nodeTypeSchema>;
+
+export const slideNodeSchema = z.object({
+  id: z.string(),
+  type: nodeTypeSchema,
+  content: z.string(),
+  language: z.string().optional(),
+  label: z.string().optional(),
+  meta: z.record(z.unknown()).optional(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export type SlideNode = z.infer<typeof slideNodeSchema>;
+
+export const slideSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  nodes: z.array(slideNodeSchema),
 });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
+export type Slide = z.infer<typeof slideSchema>;
+
+export const scenarioSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  icon: z.string(),
+  description: z.string(),
+  slide: slideSchema,
+});
+
+export type Scenario = z.infer<typeof scenarioSchema>;
