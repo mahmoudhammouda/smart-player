@@ -1,7 +1,7 @@
 import {
   Component, input, computed, ChangeDetectionStrategy, inject
 } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SlideNode } from '../../models/slide.model';
 
 @Component({
@@ -16,7 +16,7 @@ import { SlideNode } from '../../models/slide.model';
       <iframe
         class="sp-sandbox-frame"
         [title]="'sandbox-' + node().id"
-        [attr.srcdoc]="srcdocContent()"
+        [srcdoc]="trustedHtml()"
         sandbox="allow-scripts"
         data-testid="sandbox-iframe"
       ></iframe>
@@ -62,9 +62,9 @@ export class SandboxNodeComponent {
   node = input.required<SlideNode>();
   private sanitizer = inject(DomSanitizer);
 
-  srcdocContent = computed(() => {
+  trustedHtml = computed<SafeHtml>(() => {
     const content = this.node().content;
-    return `<!DOCTYPE html>
+    const fullHtml = `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8" />
@@ -73,5 +73,6 @@ export class SandboxNodeComponent {
 </head>
 <body>${content}</body>
 </html>`;
+    return this.sanitizer.bypassSecurityTrustHtml(fullHtml);
   });
 }
