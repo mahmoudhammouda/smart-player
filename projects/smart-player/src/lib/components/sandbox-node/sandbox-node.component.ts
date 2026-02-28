@@ -1,25 +1,24 @@
 import {
-  Component, input, ElementRef, viewChild,
-  effect, ChangeDetectionStrategy, ViewEncapsulation, Injector, inject, afterNextRender
+  Component, input, computed, ChangeDetectionStrategy, inject
 } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SlideNode } from '../../models/slide.model';
 
 @Component({
   selector: 'sp-sandbox-node',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.ShadowDom,
   template: `
     <div class="sp-sandbox-wrapper">
       <div class="sp-sandbox-indicator">
-        <span class="sp-sandbox-badge">Interactive Sandbox</span>
+        <span class="sp-sandbox-badge" data-testid="sandbox-badge">Interactive Sandbox</span>
       </div>
       <iframe
-        #sandboxFrame
         class="sp-sandbox-frame"
         [title]="'sandbox-' + node().id"
+        [attr.srcdoc]="srcdocContent()"
         sandbox="allow-scripts"
-        scrolling="no"
+        data-testid="sandbox-iframe"
       ></iframe>
     </div>
   `,
@@ -61,25 +60,11 @@ import { SlideNode } from '../../models/slide.model';
 })
 export class SandboxNodeComponent {
   node = input.required<SlideNode>();
-  frame = viewChild.required<ElementRef>('sandboxFrame');
-  private injector = inject(Injector);
+  private sanitizer = inject(DomSanitizer);
 
-  constructor() {
-    afterNextRender(() => {
-      effect(() => {
-        const content = this.node().content;
-        const iframe: HTMLIFrameElement = this.frame().nativeElement;
-        this.injectContent(iframe, content);
-      }, { injector: this.injector });
-    });
-  }
-
-  private injectContent(iframe: HTMLIFrameElement, content: string): void {
-    const doc = iframe.contentDocument || iframe.contentWindow?.document;
-    if (!doc) return;
-
-    doc.open();
-    doc.write(`<!DOCTYPE html>
+  srcdocContent = computed(() => {
+    const content = this.node().content;
+    return `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8" />
@@ -87,7 +72,6 @@ export class SandboxNodeComponent {
 <style>* { box-sizing: border-box; margin: 0; padding: 0; } body { font-family: system-ui, -apple-system, sans-serif; overflow: auto; }</style>
 </head>
 <body>${content}</body>
-</html>`);
-    doc.close();
-  }
+</html>`;
+  });
 }
