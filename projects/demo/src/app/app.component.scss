@@ -1,0 +1,256 @@
+:host {
+  display: block;
+  height: 100vh;
+  --bg: #ffffff;
+  --fg: #1e293b;
+  --muted-fg: #64748b;
+  --muted: #f1f5f9;
+  --border: #e2e8f0;
+  --card: #f8fafc;
+  --card-border: #f0f2f5;
+  --primary: #3b82f6;
+  --sidebar-bg: #f8fafc;
+  --sidebar-border: #eef1f4;
+}
+
+:host-context(.dark) {
+  --bg: #030712;
+  --fg: #f8fafc;
+  --muted-fg: #94a3b8;
+  --muted: #0f172a;
+  --border: #1e293b;
+  --card: #0f172a;
+  --card-border: #1e293b;
+  --primary: #60a5fa;
+  --sidebar-bg: #0a0f1a;
+  --sidebar-border: #151d2e;
+}
+
+.app-shell {
+  display: flex;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  z-index: 60;
+}
+
+.sidebar-header {
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid var(--sidebar-border);
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-brand-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.sidebar-brand-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.sidebar-brand-tagline {
+  font-size: 0.68rem;
+  color: var(--muted-fg);
+}
+
+.sidebar-content {
+  flex: 1;
+  padding: 8px 0;
+  overflow-y: auto;
+}
+
+.sidebar-group {
+  padding: 0 8px;
+  margin-bottom: 8px;
+}
+
+.sidebar-group-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-fg);
+  padding: 8px 8px 4px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+  color: var(--fg);
+}
+
+.sidebar-item:hover {
+  background: var(--muted);
+}
+
+.sidebar-item-active {
+  background: color-mix(in srgb, var(--primary) 10%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.sidebar-item-icon {
+  font-size: 1rem;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  color: var(--muted-fg);
+}
+
+.sidebar-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.sidebar-item-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-item-desc {
+  font-size: 0.7rem;
+  color: var(--muted-fg);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-footer {
+  padding: 10px 14px;
+  border-top: 1px solid var(--sidebar-border);
+}
+
+.sidebar-footer-text {
+  font-size: 0.7rem;
+  color: var(--muted-fg);
+}
+
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 12px;
+  height: 48px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.header-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--muted-fg);
+  letter-spacing: 0.04em;
+  flex: 1;
+  text-align: center;
+}
+
+.hamburger-btn,
+.theme-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--fg);
+  transition: background 0.15s;
+}
+
+.hamburger-btn:hover,
+.theme-btn:hover {
+  background: var(--muted);
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 60;
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 55;
+  }
+}
