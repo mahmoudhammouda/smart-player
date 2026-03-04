@@ -8,14 +8,17 @@ import { SlideNode } from '../../models/slide.model';
   selector: 'sp-math-node',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<div class="sp-math-wrapper"><div #mathContainer class="sp-math-display"></div></div>`,
+  template: `<div class="sp-math-block"><div #mathContainer class="sp-math-display"></div></div>`,
   styles: [`
     :host { display: block; }
 
-    .sp-math-wrapper {
+    .sp-math-block {
       display: flex;
       justify-content: center;
-      padding: 8px 0;
+      padding: 20px 0;
+      margin: 4px 0;
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--sp-muted, #f1f5f9) 60%, transparent);
     }
 
     .sp-math-display {
@@ -30,7 +33,7 @@ import { SlideNode } from '../../models/slide.model';
     }
 
     :host ::ng-deep .katex {
-      font-size: 1.15em;
+      font-size: 1.2em;
     }
   `]
 })

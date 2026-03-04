@@ -11,7 +11,7 @@ let mermaidInitialized = false;
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="sp-diagram-wrapper">
+    <div class="sp-diagram-block">
       @if (error()) {
         <div class="sp-diagram-error">
           <span class="sp-diagram-error-label">Diagram Error</span>
@@ -25,9 +25,12 @@ let mermaidInitialized = false;
   styles: [`
     :host { display: block; }
 
-    .sp-diagram-wrapper {
+    .sp-diagram-block {
       display: flex;
       justify-content: center;
+      padding: 16px 0;
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--sp-muted, #f1f5f9) 50%, transparent);
     }
 
     .sp-diagram-render {
@@ -44,7 +47,7 @@ let mermaidInitialized = false;
       padding: 12px 16px;
       border-radius: 8px;
       background: rgba(239, 68, 68, 0.08);
-      border: 1px solid rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.15);
       display: flex;
       flex-direction: column;
       gap: 6px;

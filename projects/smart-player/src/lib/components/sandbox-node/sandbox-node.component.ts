@@ -9,10 +9,7 @@ import { SlideNode } from '../../models/slide.model';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="sp-sandbox-wrapper">
-      <div class="sp-sandbox-indicator">
-        <span class="sp-sandbox-badge" data-testid="sandbox-badge">Interactive Sandbox</span>
-      </div>
+    <div class="sp-sandbox-block">
       <iframe
         class="sp-sandbox-frame"
         [title]="'sandbox-' + node().id"
@@ -25,34 +22,16 @@ import { SlideNode } from '../../models/slide.model';
   styles: [`
     :host { display: block; }
 
-    .sp-sandbox-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .sp-sandbox-indicator {
-      display: flex;
-      align-items: center;
-    }
-
-    .sp-sandbox-badge {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #db2777;
-      background: rgba(219, 39, 119, 0.1);
-      border: 1px solid rgba(219, 39, 119, 0.2);
-      padding: 2px 8px;
-      border-radius: 999px;
+    .sp-sandbox-block {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--sp-border, #e2e8f0);
     }
 
     .sp-sandbox-frame {
       width: 100%;
-      min-height: 280px;
+      min-height: 300px;
       border: none;
-      border-radius: 8px;
       background: #fff;
       display: block;
     }

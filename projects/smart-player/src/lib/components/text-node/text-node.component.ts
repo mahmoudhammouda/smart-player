@@ -10,13 +10,14 @@ import { SlideNode } from '../../models/slide.model';
     :host { display: block; }
 
     .sp-text-content {
-      font-size: 0.9rem;
-      line-height: 1.75;
+      font-size: 1.05rem;
+      line-height: 1.85;
       color: var(--sp-foreground, #1e293b);
+      letter-spacing: -0.005em;
     }
 
     :host ::ng-deep p {
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     :host ::ng-deep p:last-child {
@@ -34,8 +35,8 @@ import { SlideNode } from '../../models/slide.model';
 
     :host ::ng-deep .sp-inline-code {
       font-family: var(--sp-font-mono, 'JetBrains Mono', monospace);
-      font-size: 0.8em;
-      padding: 2px 6px;
+      font-size: 0.85em;
+      padding: 2px 7px;
       border-radius: 4px;
       background: var(--sp-muted, #f1f5f9);
       color: var(--sp-primary, #3b82f6);
@@ -43,16 +44,16 @@ import { SlideNode } from '../../models/slide.model';
     }
 
     :host ::ng-deep ol, :host ::ng-deep ul {
-      padding-left: 20px;
-      margin-bottom: 12px;
+      padding-left: 22px;
+      margin-bottom: 16px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
 
     :host ::ng-deep li {
-      font-size: 0.875rem;
-      line-height: 1.6;
+      font-size: 1rem;
+      line-height: 1.7;
     }
   `]
 })

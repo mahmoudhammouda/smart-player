@@ -9,19 +9,19 @@ import { SlideNode } from '../../models/slide.model';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="sp-code-wrapper">
-      <div class="sp-code-header">
+    <div class="sp-code-block">
+      <div class="sp-code-bar">
         <div class="sp-code-dots">
-          <span class="dot dot-red"></span>
-          <span class="dot dot-yellow"></span>
-          <span class="dot dot-green"></span>
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
         </div>
         <span class="sp-code-lang">{{ node().language || 'text' }}</span>
-        <button class="sp-copy-btn" (click)="copyCode()" [attr.title]="copied() ? 'Copied!' : 'Copy code'">
+        <button class="sp-code-copy" (click)="copyCode()" [attr.title]="copied() ? 'Copied!' : 'Copy code'">
           @if (copied()) {
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           } @else {
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           }
         </button>
       </div>
@@ -33,14 +33,13 @@ import { SlideNode } from '../../models/slide.model';
   styles: [`
     :host { display: block; }
 
-    .sp-code-wrapper {
-      border-radius: 8px;
+    .sp-code-block {
+      border-radius: 10px;
       overflow: hidden;
-      border: 1px solid var(--sp-border, #1e293b);
       background: #1a1b26;
     }
 
-    .sp-code-header {
+    .sp-code-bar {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -55,17 +54,17 @@ import { SlideNode } from '../../models/slide.model';
     }
 
     .dot {
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
     }
-    .dot-red    { background: #ff5f57; }
-    .dot-yellow { background: #febc2e; }
-    .dot-green  { background: #28c840; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
 
     .sp-code-lang {
       flex: 1;
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       font-weight: 600;
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -73,9 +72,9 @@ import { SlideNode } from '../../models/slide.model';
       text-align: center;
     }
 
-    .sp-copy-btn {
-      width: 28px;
-      height: 28px;
+    .sp-code-copy {
+      width: 26px;
+      height: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -87,7 +86,7 @@ import { SlideNode } from '../../models/slide.model';
       transition: background 0.15s;
     }
 
-    .sp-copy-btn:hover {
+    .sp-code-copy:hover {
       background: rgba(255,255,255,0.06);
     }
 

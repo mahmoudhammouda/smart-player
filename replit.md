@@ -2,7 +2,7 @@
 
 ## Overview
 
-A distributable Angular 19+ library package (`smart-player`) that renders structured JSON slides from an LLM into richly formatted educational content. Includes a demo Angular application for testing.
+A distributable Angular 19+ library package (`smart-player`) that renders structured JSON slides from an LLM into richly formatted educational content. Uses a "Continuous Document" UI layout (Notion/Medium style) where nodes flow as one cohesive article. Includes a demo Angular application for testing and a promotional landing page.
 
 ## Architecture
 
@@ -10,21 +10,25 @@ A distributable Angular 19+ library package (`smart-player`) that renders struct
 - **Library**: Angular 19 standalone components with signals (`input()`, `signal()`, `output()`, `viewChild()`, `afterRender()`)
 - **Demo**: Angular 19 standalone app with routing, sidebar navigation, dark mode
 - **Build**: `ng build smart-player` produces an npm-distributable package in `dist/smart-player/`
+- **UI Pattern**: Continuous Document — no card borders/shadows; text flows naturally; code/math/diagrams are embedded blocks; actions appear on hover (Ghost UI)
 
 ## Key Features
 
-1. **SmartPlayer** — Main orchestrator component (`<sp-smart-player>`) that renders a `Slide` using a node registry
+1. **SmartPlayer** — Main orchestrator component (`<sp-smart-player>`) that renders a `Slide` as a continuous document
 2. **Node Registry** — Injectable service mapping node types to components
 3. **5 Node Types**:
    - `text` — Markdown-aware text with inline formatting (bold, italic, code, lists)
-   - `math` — KaTeX display-mode formula rendering
-   - `code` — Highlight.js syntax-highlighted code blocks with copy button
-   - `diagram` — Mermaid.js flowcharts and graphs
-   - `interactive-sandbox` — Isolated iframe-based HTML/CSS/JS sandboxes
-4. **Refine Node** — Event emitter for LLM refinement per node block
-5. **Upload Playground** — Load custom JSON slides via file drop or paste
-6. **4 Demo Scenarios** — Math, history, data structures, physics
-7. **Dark Mode** — Full dark/light toggle with localStorage persistence
+   - `math` — KaTeX display-mode formula rendering (subtle background block)
+   - `code` — Highlight.js syntax-highlighted code blocks with copy button (dark terminal style)
+   - `diagram` — Mermaid.js flowcharts and graphs (centered with subtle background)
+   - `interactive-sandbox` — Isolated iframe-based HTML/CSS/JS sandboxes (bordered container)
+4. **Ghost UI** — Refine button hidden by default, appears on node hover (positioned to the right)
+5. **Fade & Slide Animations** — Staggered `sp-slide-in` keyframes on node entry
+6. **Custom Node Extensibility** — `SP_CUSTOM_NODES` injection token for consumer-defined node types
+7. **Upload Playground** — Load custom JSON slides via file drop or paste
+8. **5 Demo Scenarios** — Math, history, data structures, physics, quiz (custom node)
+9. **Dark Mode** — Full dark/light toggle with localStorage persistence
+10. **Promotional Landing Page** — Home page with install command, quick start, API reference, live demos
 
 ## File Structure
 
@@ -32,31 +36,33 @@ A distributable Angular 19+ library package (`smart-player`) that renders struct
 projects/
   smart-player/                 # Angular library
     src/
-      public-api.ts             # Library public API exports
+      public-api.ts             # Library public API exports (SP_CUSTOM_NODES, etc.)
       lib/
-        models/slide.model.ts   # Slide, SlideNode, NodeType, Scenario, RefineEvent
-        services/registry.service.ts  # Node type → component registry
+        models/slide.model.ts   # Slide, SlideNode, NodeType (string), CustomNodeDefinition, RefineEvent
+        services/registry.service.ts  # SP_CUSTOM_NODES token + RegistryService
         components/
-          smart-player/         # Main orchestrator component
-          text-node/            # Markdown text renderer
-          math-node/            # KaTeX math renderer
-          code-node/            # Highlight.js code renderer
-          diagram-node/         # Mermaid.js diagram renderer
-          sandbox-node/         # Isolated iframe sandbox
+          smart-player/         # Main orchestrator — continuous document layout
+          text-node/            # Markdown text renderer (flowing paragraphs)
+          math-node/            # KaTeX math renderer (centered block)
+          code-node/            # Highlight.js code renderer (terminal block)
+          diagram-node/         # Mermaid.js diagram renderer (centered block)
+          sandbox-node/         # Isolated iframe sandbox (bordered container)
     package.json                # Library peer dependencies
     ng-package.json             # ng-packagr configuration
 
   demo/                         # Demo Angular app
     src/
       app/
-        app.component.ts        # Shell with sidebar + theme toggle
+        app.component.ts        # Shell with sidebar + theme toggle (Overview link at top)
         app.routes.ts           # Route definitions
         pages/
-          home.component.ts     # Landing page
+          home.component.ts     # Promotional landing page (install, API, demos)
           scenario.component.ts # Scenario player page
           upload.component.ts   # Custom JSON loader
+        components/
+          quiz-node.component.ts  # Example custom node (registered via SP_CUSTOM_NODES)
         data/
-          mock-scenarios.ts     # 4 demo scenarios
+          mock-scenarios.ts     # 5 demo scenarios (math, history, data-structures, physics, quiz)
 ```
 
 ## Data Format
@@ -87,12 +93,12 @@ projects/
 
 ## Development
 
-- Workflow: `npx ng serve demo --host 0.0.0.0 --port 5000 --disable-host-check`
+- Workflow: `npx ng serve demo --host 0.0.0.0 --port 5000`
+- `angular.json` has `disableHostCheck: true` for Replit proxy compatibility
 - tsconfig paths map `smart-player` → `./projects/smart-player/src/public-api.ts` for dev
 - Library build: `npx ng build smart-player` → outputs to `dist/smart-player/`
 
 ## Configuration Files
 
-- `angular.json` — Workspace config for both library and demo
+- `angular.json` — Workspace config for both library and demo (analytics disabled, disableHostCheck)
 - `tsconfig.angular.json` — Root Angular TypeScript config (extended by project tsconfigs)
-- `tsconfig.json` — Legacy config (not used by Angular projects)

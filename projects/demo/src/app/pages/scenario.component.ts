@@ -54,7 +54,7 @@ import { MOCK_SCENARIOS } from '../data/mock-scenarios';
     :host { display: block; }
 
     .scenario-page {
-      max-width: 860px;
+      max-width: 800px;
       margin: 0 auto;
       padding: 24px 24px 80px;
     }
