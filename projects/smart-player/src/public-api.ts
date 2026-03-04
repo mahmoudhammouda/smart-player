@@ -1,5 +1,5 @@
 export * from './lib/models/slide.model';
-export * from './lib/services/registry.service';
+export { RegistryService, SP_CUSTOM_NODES } from './lib/services/registry.service';
 export * from './lib/components/smart-player/smart-player.component';
 export * from './lib/components/text-node/text-node.component';
 export * from './lib/components/math-node/math-node.component';

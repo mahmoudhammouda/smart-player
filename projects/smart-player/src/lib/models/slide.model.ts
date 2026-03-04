@@ -1,4 +1,10 @@
-export type NodeType = 'text' | 'math' | 'code' | 'diagram' | 'interactive-sandbox';
+export type BuiltInNodeType = 'text' | 'math' | 'code' | 'diagram' | 'interactive-sandbox';
+
+export const BUILT_IN_NODE_TYPES: readonly BuiltInNodeType[] = [
+  'text', 'math', 'code', 'diagram', 'interactive-sandbox'
+] as const;
+
+export type NodeType = string;
 
 export interface SlideNode {
   id: string;
@@ -7,6 +13,12 @@ export interface SlideNode {
   language?: string;
   label?: string;
   meta?: Record<string, unknown>;
+}
+
+export interface CustomNodeDefinition {
+  type: string;
+  component: import('@angular/core').Type<unknown>;
+  label?: string;
 }
 
 export interface Slide {

@@ -292,4 +292,46 @@ draw();
       ],
     },
   },
+  {
+    id: 'quiz-demo',
+    name: 'Quiz Demo',
+    icon: 'quiz',
+    description: 'Custom node type: interactive quiz questions',
+    slide: {
+      id: 'slide-quiz-1',
+      title: 'Science Quiz',
+      description: 'Test your knowledge with this interactive quiz powered by a custom node type',
+      tags: ['quiz', 'custom-node', 'extensibility'],
+      nodes: [
+        {
+          id: 'n1',
+          type: 'text',
+          label: 'Instructions',
+          content: 'This scenario demonstrates the **extensibility** of SmartPlayer. The quiz node below is a **custom node type** registered by the consumer application, not built into the library.',
+        },
+        {
+          id: 'n2',
+          type: 'quiz',
+          label: 'General Science',
+          content: JSON.stringify([
+            {
+              question: 'What is the chemical symbol for water?',
+              options: ['H2O', 'CO2', 'NaCl', 'O2'],
+              answer: 0
+            },
+            {
+              question: 'Which planet is known as the Red Planet?',
+              options: ['Venus', 'Jupiter', 'Mars', 'Saturn'],
+              answer: 2
+            },
+            {
+              question: 'What is the speed of light in vacuum (approximately)?',
+              options: ['3 x 10^6 m/s', '3 x 10^8 m/s', '3 x 10^10 m/s', '3 x 10^4 m/s'],
+              answer: 1
+            }
+          ]),
+        },
+      ],
+    },
+  },
 ];

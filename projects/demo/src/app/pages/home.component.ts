@@ -294,7 +294,7 @@ export class HomeComponent {
   ];
 
   getIcon(icon: string): string {
-    const icons: Record<string, string> = { function: '\u03A3', history: '\u231A', tree: '\u{1F332}', wave: '\u223C' };
+    const icons: Record<string, string> = { function: '\u03A3', history: '\u231A', tree: '\u{1F332}', wave: '\u223C', quiz: '?' };
     return icons[icon] || icon;
   }
 }

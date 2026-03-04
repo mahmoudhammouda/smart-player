@@ -1,17 +1,17 @@
 import {
   Component, input, output, signal, computed, inject,
-  ChangeDetectionStrategy, Type, OnInit
+  ChangeDetectionStrategy, Type, OnInit, Optional, Inject
 } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
-import { Slide, SlideNode, NodeType, RefineEvent } from '../../models/slide.model';
-import { RegistryService } from '../../services/registry.service';
+import { Slide, SlideNode, NodeType, RefineEvent, CustomNodeDefinition } from '../../models/slide.model';
+import { RegistryService, SP_CUSTOM_NODES } from '../../services/registry.service';
 import { TextNodeComponent } from '../text-node/text-node.component';
 import { MathNodeComponent } from '../math-node/math-node.component';
 import { CodeNodeComponent } from '../code-node/code-node.component';
 import { DiagramNodeComponent } from '../diagram-node/diagram-node.component';
 import { SandboxNodeComponent } from '../sandbox-node/sandbox-node.component';
 
-const NODE_TYPE_LABELS: Record<NodeType, string> = {
+const NODE_TYPE_LABELS: Record<string, string> = {
   'text': 'Text',
   'math': 'Formula',
   'code': 'Code',
@@ -292,17 +292,27 @@ export class SmartPlayerComponent implements OnInit {
   refiningId = signal<string | null>(null);
 
   private registry = inject(RegistryService);
+  private customNodes: CustomNodeDefinition[] = inject(SP_CUSTOM_NODES, { optional: true }) ?? [];
 
   ngOnInit(): void {
     this.registerDefaults();
+    this.registerCustomNodes();
   }
 
   private registerDefaults(): void {
-    if (!this.registry.has('text')) this.registry.register('text', TextNodeComponent);
-    if (!this.registry.has('math')) this.registry.register('math', MathNodeComponent);
-    if (!this.registry.has('code')) this.registry.register('code', CodeNodeComponent);
-    if (!this.registry.has('diagram')) this.registry.register('diagram', DiagramNodeComponent);
-    if (!this.registry.has('interactive-sandbox')) this.registry.register('interactive-sandbox', SandboxNodeComponent);
+    if (!this.registry.has('text')) this.registry.register('text', TextNodeComponent, 'Text');
+    if (!this.registry.has('math')) this.registry.register('math', MathNodeComponent, 'Formula');
+    if (!this.registry.has('code')) this.registry.register('code', CodeNodeComponent, 'Code');
+    if (!this.registry.has('diagram')) this.registry.register('diagram', DiagramNodeComponent, 'Diagram');
+    if (!this.registry.has('interactive-sandbox')) this.registry.register('interactive-sandbox', SandboxNodeComponent, 'Interactive');
+  }
+
+  private registerCustomNodes(): void {
+    for (const def of this.customNodes) {
+      if (!this.registry.has(def.type)) {
+        this.registry.register(def.type, def.component, def.label);
+      }
+    }
   }
 
   getComponent(type: NodeType): Type<unknown> | null {
@@ -310,7 +320,7 @@ export class SmartPlayerComponent implements OnInit {
   }
 
   getLabel(type: NodeType): string {
-    return NODE_TYPE_LABELS[type] || type;
+    return NODE_TYPE_LABELS[type] || this.registry.getLabel(type) || type;
   }
 
   async refineNode(node: SlideNode): Promise<void> {
