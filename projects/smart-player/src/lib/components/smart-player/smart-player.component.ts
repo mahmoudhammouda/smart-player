@@ -1,6 +1,6 @@
 import {
-  Component, input, output, signal, computed, inject,
-  ChangeDetectionStrategy, Type, OnInit, Optional, Inject
+  Component, input, output, signal, inject,
+  ChangeDetectionStrategy, Type, OnInit
 } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
 import { Slide, SlideNode, NodeType, RefineEvent, CustomNodeDefinition } from '../../models/slide.model';
@@ -10,6 +10,23 @@ import { MathNodeComponent } from '../math-node/math-node.component';
 import { CodeNodeComponent } from '../code-node/code-node.component';
 import { DiagramNodeComponent } from '../diagram-node/diagram-node.component';
 import { SandboxNodeComponent } from '../sandbox-node/sandbox-node.component';
+import { HeadingNodeComponent } from '../heading-node/heading-node.component';
+import { ListNodeComponent } from '../list-node/list-node.component';
+import { DividerNodeComponent } from '../divider-node/divider-node.component';
+import { FootnoteNodeComponent } from '../footnote-node/footnote-node.component';
+import { CalloutNodeComponent } from '../callout-node/callout-node.component';
+import { QuoteNodeComponent } from '../quote-node/quote-node.component';
+import { KeyConceptNodeComponent } from '../key-concept-node/key-concept-node.component';
+import { StepByStepNodeComponent } from '../step-by-step-node/step-by-step-node.component';
+import { TableNodeComponent } from '../table-node/table-node.component';
+import { ImageCaptionNodeComponent } from '../image-caption-node/image-caption-node.component';
+import { VideoEmbedNodeComponent } from '../video-embed-node/video-embed-node.component';
+import { AudioPlayerNodeComponent } from '../audio-player-node/audio-player-node.component';
+import { GalleryNodeComponent } from '../gallery-node/gallery-node.component';
+import { FillBlanksNodeComponent } from '../fill-blanks-node/fill-blanks-node.component';
+import { FlashCardNodeComponent } from '../flash-card-node/flash-card-node.component';
+import { TocNodeComponent } from '../toc-node/toc-node.component';
+import { ProgressNodeComponent } from '../progress-node/progress-node.component';
 
 const NODE_TYPE_LABELS: Record<string, string> = {
   'text': 'Text',
@@ -17,7 +34,29 @@ const NODE_TYPE_LABELS: Record<string, string> = {
   'code': 'Code',
   'diagram': 'Diagram',
   'interactive-sandbox': 'Interactive',
+  'heading': 'Heading',
+  'list': 'List',
+  'divider': 'Divider',
+  'footnote': 'Footnote',
+  'callout': 'Callout',
+  'quote': 'Quote',
+  'key-concept': 'Key Concept',
+  'step-by-step': 'Steps',
+  'table': 'Table',
+  'image-caption': 'Image',
+  'video-embed': 'Video',
+  'audio-player': 'Audio',
+  'gallery': 'Gallery',
+  'fill-blanks': 'Exercise',
+  'flash-card': 'Flash Cards',
+  'toc': 'Contents',
+  'progress': 'Progress',
 };
+
+const TEXT_LIKE_NODES = new Set([
+  'text', 'heading', 'list', 'divider', 'footnote',
+  'callout', 'quote', 'key-concept', 'progress',
+]);
 
 @Component({
   selector: 'sp-smart-player',
@@ -45,17 +84,17 @@ const NODE_TYPE_LABELS: Record<string, string> = {
         @for (node of slide().nodes; track node.id; let i = $index) {
           <section
             class="sp-node"
-            [class.sp-node-text]="node.type === 'text'"
-            [class.sp-node-embed]="node.type !== 'text'"
+            [class.sp-node-text]="isTextLike(node.type)"
+            [class.sp-node-embed]="!isTextLike(node.type)"
             [style.--sp-node-delay]="(i * 60) + 'ms'"
           >
-            @if (node.label && node.type === 'text') {
+            @if (node.label && isTextLike(node.type)) {
               <h2 class="sp-section-heading">{{ node.label }}</h2>
             }
-            @if (node.label && node.type !== 'text') {
+            @if (node.label && !isTextLike(node.type)) {
               <div class="sp-embed-label">
                 <span class="sp-embed-type">{{ getLabel(node.type) }}</span>
-                <span class="sp-embed-separator">·</span>
+                <span class="sp-embed-separator">&middot;</span>
                 <span class="sp-embed-name">{{ node.label }}</span>
               </div>
             }
@@ -104,14 +143,12 @@ const NODE_TYPE_LABELS: Record<string, string> = {
       --sp-bg: #0f172a;
     }
 
-    /* ── Document container ── */
     .sp-doc {
       max-width: 760px;
       margin: 0 auto;
       padding: 48px 0;
     }
 
-    /* ── Header ── */
     .sp-doc-header {
       margin-bottom: 40px;
       padding-bottom: 28px;
@@ -152,20 +189,17 @@ const NODE_TYPE_LABELS: Record<string, string> = {
       color: var(--sp-muted-fg);
     }
 
-    /* ── Document body ── */
     .sp-doc-body {
       display: flex;
       flex-direction: column;
     }
 
-    /* ── Node base ── */
     .sp-node {
       position: relative;
       animation: sp-slide-in 0.4s ease both;
       animation-delay: var(--sp-node-delay, 0ms);
     }
 
-    /* ── Text nodes: flow like paragraphs ── */
     .sp-node-text {
       margin-bottom: 8px;
     }
@@ -183,7 +217,6 @@ const NODE_TYPE_LABELS: Record<string, string> = {
       margin-top: 0;
     }
 
-    /* ── Embed nodes: code, math, diagrams, sandbox ── */
     .sp-node-embed {
       margin: 24px 0;
     }
@@ -218,7 +251,6 @@ const NODE_TYPE_LABELS: Record<string, string> = {
       position: relative;
     }
 
-    /* ── Ghost UI for actions ── */
     .sp-ghost-actions {
       position: absolute;
       top: 4px;
@@ -269,7 +301,6 @@ const NODE_TYPE_LABELS: Record<string, string> = {
       cursor: not-allowed;
     }
 
-    /* ── Mobile: ghost actions inline ── */
     @media (max-width: 900px) {
       .sp-ghost-actions {
         position: relative;
@@ -287,7 +318,6 @@ const NODE_TYPE_LABELS: Record<string, string> = {
       }
     }
 
-    /* ── Animations ── */
     @keyframes sp-fade-in {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -330,11 +360,35 @@ export class SmartPlayerComponent implements OnInit {
   }
 
   private registerDefaults(): void {
-    if (!this.registry.has('text')) this.registry.register('text', TextNodeComponent, 'Text');
-    if (!this.registry.has('math')) this.registry.register('math', MathNodeComponent, 'Formula');
-    if (!this.registry.has('code')) this.registry.register('code', CodeNodeComponent, 'Code');
-    if (!this.registry.has('diagram')) this.registry.register('diagram', DiagramNodeComponent, 'Diagram');
-    if (!this.registry.has('interactive-sandbox')) this.registry.register('interactive-sandbox', SandboxNodeComponent, 'Interactive');
+    const defaults: [string, Type<unknown>, string][] = [
+      ['text', TextNodeComponent, 'Text'],
+      ['math', MathNodeComponent, 'Formula'],
+      ['code', CodeNodeComponent, 'Code'],
+      ['diagram', DiagramNodeComponent, 'Diagram'],
+      ['interactive-sandbox', SandboxNodeComponent, 'Interactive'],
+      ['heading', HeadingNodeComponent, 'Heading'],
+      ['list', ListNodeComponent, 'List'],
+      ['divider', DividerNodeComponent, 'Divider'],
+      ['footnote', FootnoteNodeComponent, 'Footnote'],
+      ['callout', CalloutNodeComponent, 'Callout'],
+      ['quote', QuoteNodeComponent, 'Quote'],
+      ['key-concept', KeyConceptNodeComponent, 'Key Concept'],
+      ['step-by-step', StepByStepNodeComponent, 'Steps'],
+      ['table', TableNodeComponent, 'Table'],
+      ['image-caption', ImageCaptionNodeComponent, 'Image'],
+      ['video-embed', VideoEmbedNodeComponent, 'Video'],
+      ['audio-player', AudioPlayerNodeComponent, 'Audio'],
+      ['gallery', GalleryNodeComponent, 'Gallery'],
+      ['fill-blanks', FillBlanksNodeComponent, 'Exercise'],
+      ['flash-card', FlashCardNodeComponent, 'Flash Cards'],
+      ['toc', TocNodeComponent, 'Contents'],
+      ['progress', ProgressNodeComponent, 'Progress'],
+    ];
+    for (const [type, component, label] of defaults) {
+      if (!this.registry.has(type)) {
+        this.registry.register(type, component, label);
+      }
+    }
   }
 
   private registerCustomNodes(): void {
@@ -343,6 +397,10 @@ export class SmartPlayerComponent implements OnInit {
         this.registry.register(def.type, def.component, def.label);
       }
     }
+  }
+
+  isTextLike(type: NodeType): boolean {
+    return TEXT_LIKE_NODES.has(type);
   }
 
   getComponent(type: NodeType): Type<unknown> | null {

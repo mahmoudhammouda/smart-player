@@ -293,6 +293,242 @@ draw();
     },
   },
   {
+    id: 'rich-content',
+    name: 'Rich Content Showcase',
+    icon: 'rich',
+    description: 'All 22 node types in a single educational document',
+    slide: {
+      id: 'slide-rich-1',
+      title: 'The Solar System: A Complete Guide',
+      description: 'An interactive lesson showcasing every node type available in SmartPlayer',
+      tags: ['astronomy', 'showcase', 'interactive'],
+      nodes: [
+        {
+          id: 'rc-toc',
+          type: 'toc',
+          label: 'Table of Contents',
+          content: [
+            { title: 'Introduction', level: 1 },
+            { title: 'The Sun', level: 2 },
+            { title: 'Inner Planets', level: 2 },
+            { title: 'Outer Planets', level: 2 },
+            { title: 'Key Formulas', level: 1 },
+            { title: 'Exercises', level: 1 },
+          ],
+        },
+        {
+          id: 'rc-heading1',
+          type: 'heading',
+          content: 'Introduction to the Solar System',
+          meta: { level: 1 },
+        },
+        {
+          id: 'rc-text1',
+          type: 'text',
+          content: 'Our solar system consists of a star, eight planets, dwarf planets, moons, and countless smaller bodies. It formed approximately **4.6 billion years ago** from a giant molecular cloud.',
+        },
+        {
+          id: 'rc-callout-info',
+          type: 'callout',
+          content: 'The solar system is located in the Orion Arm of the Milky Way galaxy, about 26,000 light-years from the galactic center.',
+          meta: { variant: 'info', title: 'Did you know?' },
+        },
+        {
+          id: 'rc-divider1',
+          type: 'divider',
+          content: '',
+          meta: { style: 'dots' },
+        },
+        {
+          id: 'rc-heading2',
+          type: 'heading',
+          content: 'Planetary Data',
+          meta: { level: 2 },
+        },
+        {
+          id: 'rc-table1',
+          type: 'table',
+          label: 'Planet Comparison',
+          content: {
+            headers: ['Planet', 'Distance (AU)', 'Diameter (km)', 'Moons', 'Type'],
+            rows: [
+              ['Mercury', '0.39', '4,879', '0', 'Rocky'],
+              ['Venus', '0.72', '12,104', '0', 'Rocky'],
+              ['Earth', '1.00', '12,756', '1', 'Rocky'],
+              ['Mars', '1.52', '6,792', '2', 'Rocky'],
+              ['Jupiter', '5.20', '142,984', '95', 'Gas Giant'],
+              ['Saturn', '9.58', '120,536', '146', 'Gas Giant'],
+              ['Uranus', '19.18', '51,118', '28', 'Ice Giant'],
+              ['Neptune', '30.07', '49,528', '16', 'Ice Giant'],
+            ],
+          },
+          meta: { caption: 'Basic properties of the eight planets in our solar system' },
+        },
+        {
+          id: 'rc-quote1',
+          type: 'quote',
+          content: 'Somewhere, something incredible is waiting to be known.',
+          meta: { author: 'Carl Sagan', source: 'Cosmos' },
+        },
+        {
+          id: 'rc-key1',
+          type: 'key-concept',
+          content: 'An Astronomical Unit (AU) is the average distance between the Earth and the Sun, approximately 149.6 million kilometers. It is used as a standard measure for distances within the solar system.',
+          meta: { term: 'Astronomical Unit (AU)' },
+        },
+        {
+          id: 'rc-heading3',
+          type: 'heading',
+          content: 'Orbital Mechanics',
+          meta: { level: 2 },
+        },
+        {
+          id: 'rc-text2',
+          type: 'text',
+          content: "Kepler's three laws describe planetary motion. The third law relates orbital period to distance from the Sun:",
+        },
+        {
+          id: 'rc-math1',
+          type: 'math',
+          label: "Kepler's Third Law",
+          content: 'T^2 = \\frac{4\\pi^2}{GM} a^3',
+        },
+        {
+          id: 'rc-footnote1',
+          type: 'footnote',
+          content: 'Where T is the orbital period, G is the gravitational constant, M is the solar mass, and a is the semi-major axis of the orbit.',
+        },
+        {
+          id: 'rc-steps1',
+          type: 'step-by-step',
+          label: 'How to Calculate Orbital Period',
+          content: [
+            { title: 'Measure the semi-major axis', description: 'Determine the average distance (a) from the planet to the Sun in AU.' },
+            { title: 'Apply the formula', description: 'Use T² = a³ when measuring in AU and Earth years.' },
+            { title: 'Take the square root', description: 'Calculate T = sqrt(a³) to find the orbital period in Earth years.' },
+          ],
+        },
+        {
+          id: 'rc-callout-tip',
+          type: 'callout',
+          content: "For Earth, a = 1 AU, so T = sqrt(1) = 1 year. For Mars, a = 1.52 AU, so T = sqrt(1.52³) ≈ 1.88 years.",
+          meta: { variant: 'tip', title: 'Quick Check' },
+        },
+        {
+          id: 'rc-code1',
+          type: 'code',
+          label: 'Python: Orbital Period Calculator',
+          language: 'python',
+          content: `import math
+
+def orbital_period(semi_major_axis_au):
+    """Calculate orbital period in Earth years using Kepler's 3rd law."""
+    return math.sqrt(semi_major_axis_au ** 3)
+
+planets = {
+    "Mercury": 0.39, "Venus": 0.72, "Earth": 1.0,
+    "Mars": 1.52, "Jupiter": 5.20, "Saturn": 9.58,
+}
+
+for name, au in planets.items():
+    period = orbital_period(au)
+    print(f"{name}: {period:.2f} Earth years")`,
+        },
+        {
+          id: 'rc-diagram1',
+          type: 'diagram',
+          label: 'Solar System Structure',
+          content: `graph LR
+    S((Sun)) --> M[Mercury]
+    S --> V[Venus]
+    S --> E[Earth]
+    S --> Ma[Mars]
+    Ma --> AB[Asteroid Belt]
+    AB --> J[Jupiter]
+    J --> Sa[Saturn]
+    Sa --> U[Uranus]
+    U --> N[Neptune]
+    style S fill:#f59e0b,color:#fff,stroke:#d97706
+    style E fill:#3b82f6,color:#fff,stroke:#1d4ed8
+    style Ma fill:#ef4444,color:#fff,stroke:#dc2626
+    style J fill:#f97316,color:#fff,stroke:#ea580c`,
+        },
+        {
+          id: 'rc-list1',
+          type: 'list',
+          content: ['Rocky planets: Mercury, Venus, Earth, Mars', 'Gas giants: Jupiter, Saturn', 'Ice giants: Uranus, Neptune', 'Dwarf planets: Pluto, Eris, Ceres, Haumea, Makemake'],
+          meta: { ordered: false },
+        },
+        {
+          id: 'rc-divider2',
+          type: 'divider',
+          content: '',
+          meta: { style: 'stars' },
+        },
+        {
+          id: 'rc-heading4',
+          type: 'heading',
+          content: 'Exercises',
+          meta: { level: 2 },
+        },
+        {
+          id: 'rc-fill1',
+          type: 'fill-blanks',
+          label: 'Fill in the Blanks',
+          content: 'The closest planet to the Sun is ___Mercury___. The largest planet is ___Jupiter___. Earth has ___1___ natural satellite(s).',
+        },
+        {
+          id: 'rc-flash1',
+          type: 'flash-card',
+          label: 'Planet Flash Cards',
+          content: [
+            { front: 'Which planet is known as the Red Planet?', back: 'Mars — due to iron oxide (rust) on its surface' },
+            { front: 'Which planet has the most moons?', back: 'Saturn — with 146 confirmed moons' },
+            { front: 'What is the Great Red Spot?', back: 'A giant storm on Jupiter, larger than Earth, that has been raging for over 350 years' },
+            { front: 'Which planet rotates on its side?', back: 'Uranus — its axial tilt is about 98 degrees' },
+          ],
+        },
+        {
+          id: 'rc-callout-warn',
+          type: 'callout',
+          content: 'Pluto was reclassified as a dwarf planet in 2006 by the International Astronomical Union (IAU). This remains a topic of debate in the scientific community.',
+          meta: { variant: 'warning', title: 'Common Misconception' },
+        },
+        {
+          id: 'rc-image1',
+          type: 'image-caption',
+          content: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/The_blue_marble.jpg/600px-The_blue_marble.jpg',
+          meta: { caption: 'The Blue Marble — Earth as seen from Apollo 17 (1972)', alt: 'Earth from space showing Africa and Antarctica' },
+        },
+        {
+          id: 'rc-video1',
+          type: 'video-embed',
+          label: 'The Scale of the Universe',
+          content: 'https://www.youtube.com/watch?v=Kj4524AAZdE',
+          meta: { provider: 'youtube' },
+        },
+        {
+          id: 'rc-progress1',
+          type: 'progress',
+          content: 'Introduction to the Solar System',
+          meta: { completed: true },
+        },
+        {
+          id: 'rc-progress2',
+          type: 'progress',
+          content: 'Planetary data and orbital mechanics',
+          meta: { completed: true },
+        },
+        {
+          id: 'rc-progress3',
+          type: 'progress',
+          content: 'Exercises and review',
+          meta: { completed: false },
+        },
+      ],
+    },
+  },
+  {
     id: 'quiz-demo',
     name: 'Quiz Demo',
     icon: 'quiz',

@@ -1,0 +1,56 @@
+Dictionnaire des Éléments (Nodes) et Librairies Associées
+​Chaque nœud est piloté par : { type: string, content: any, metadata: any }.
+​A. Typographie & Structure (Narration)
+​HEADING (H1, H2, H3) : Titres sémantiques.
+​Librairie : Angular Common / Tailwind CSS.
+​TEXT (Rich Paragraph) : Support du Markdown complet.
+​Librairie : ngx-markdown (moteur principal).
+​LIST (Bullet/Numbered) : Listes imbriquées stylisées.
+​Librairie : Angular Common / Tailwind.
+​DIVIDER : Séparateur de section élégant.
+​Librairie : Lucide Icons (pour les séparateurs stylisés).
+​FOOTNOTE : Précisions en bas de bloc.
+​Librairie : Tailwind CSS (typographie micro).
+​B. Blocs Pédagogiques & Emphase (Engagement)
+​CALLOUT : Encarts d'alerte ou d'info.
+​Librairie : Lucide-Angular (pour les icônes) + Tailwind.
+​QUOTE : Citations éditoriales.
+​Librairie : Tailwind (bordures décoratives) + Google Fonts (fontes Serif).
+​KEY_CONCEPT : Définitions à retenir.
+​Librairie : Tailwind (effets de glassmorphism / anneaux néon).
+​STEP_BY_STEP : Parcours numéroté sur la Lifeline.
+​Librairie : Angular Common (directives structurelles).
+​C. Contenu Scientifique & Technique (Expertise)
+​FORMULA (LaTeX) : Rendu d'équations mathématiques et physiques.
+​Librairie : KaTeX (via ngx-markdown).
+​CODE_BLOCK : Fenêtre de code interactive.
+​Librairie : Highlight.js (coloration) + Clipboard API.
+​DIAGRAM (Mermaid) : Graphiques, diagrammes et flux.
+​Librairie : Mermaid.js.
+​TABLE : Tableaux de données complexes.
+​Librairie : Tailwind CSS / Angular Material Table (si tri requis).
+​CHEMICAL_STRUCTURE : Molécules et structures.
+​Librairie : SmilesDrawer ou rendu SVG via Mermaid.
+​D. Multimédia & Illustrations (Visuel)
+​IMAGE_CAPTION : Images avec légendes et zoom.
+​Librairie : ngx-image-viewer ou CSS transform natif.
+​VIDEO_EMBED : Lecteurs vidéo.
+​Librairie : YouTube Player API / HTML5 Video.
+​AUDIO_PLAYER : Podcasts ou TTS (Text-to-Speech).
+​Librairie : Web Audio API / Howler.js.
+​GALLERY : Grilles d'images comparatives.
+​Librairie : Tailwind Grid.
+​E. Interactif & Évaluation (Vérification)
+​SANDBOX (Interactive) : Simulations 3D ou mini-jeux.
+​Librairie : Three.js (3D) ou p5.js (2D) injectés via Shadow DOM.
+​QUIZ_MCQ : Questionnaires interactifs.
+​Librairie : Angular Reactive Forms / Signals.
+​FILL_IN_BLANKS : Exercices à trous.
+​Librairie : Angular Common.
+​FLASH_CARD : Cartes mémo réversibles.
+​Librairie : CSS 3D Transforms.
+​F. Navigation & Progression (Meta)
+​TOC (Table of Contents) : Sommaire dynamique.
+​Librairie : Intersection Observer API.
+​PROGRESS_ANCHOR : Marqueurs de succès.
+​Librairie : Angular Web Animations API.

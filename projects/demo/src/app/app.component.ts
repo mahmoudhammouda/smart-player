@@ -141,6 +141,7 @@ export class AppComponent {
       history: '\u231A',
       tree: '\u{1F332}',
       wave: '\u223C',
+      rich: '\u{1F4DA}',
       quiz: '?',
     };
     return icons[icon] || icon;

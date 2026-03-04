@@ -61,19 +61,19 @@ export class TextNodeComponent {
   node = input.required<SlideNode>();
 
   renderContent(): string {
-    const content = this.node().content;
-    const paragraphs = content.split('\n\n');
-    return paragraphs.map(para => {
+    const content: string = String(this.node().content ?? '');
+    const paragraphs: string[] = content.split('\n\n');
+    return paragraphs.map((para: string) => {
       const trimmed = para.trim();
       if (trimmed.match(/^\d+\. /m)) {
-        const items = trimmed.split('\n').map(line => {
+        const items = trimmed.split('\n').map((line: string) => {
           const match = line.match(/^\d+\. (.+)/);
           return match ? `<li>${this.parseInline(match[1])}</li>` : '';
         }).join('');
         return `<ol>${items}</ol>`;
       }
       if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
-        const items = trimmed.split('\n').map(line => {
+        const items = trimmed.split('\n').map((line: string) => {
           const match = line.match(/^[-*] (.+)/);
           return match ? `<li>${this.parseInline(match[1])}</li>` : '';
         }).join('');

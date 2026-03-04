@@ -1,7 +1,16 @@
-export type BuiltInNodeType = 'text' | 'math' | 'code' | 'diagram' | 'interactive-sandbox';
+export type BuiltInNodeType =
+  | 'text' | 'math' | 'code' | 'diagram' | 'interactive-sandbox'
+  | 'heading' | 'list' | 'divider' | 'footnote'
+  | 'callout' | 'quote' | 'key-concept' | 'step-by-step'
+  | 'table' | 'image-caption' | 'video-embed' | 'audio-player' | 'gallery'
+  | 'fill-blanks' | 'flash-card' | 'toc' | 'progress';
 
 export const BUILT_IN_NODE_TYPES: readonly BuiltInNodeType[] = [
-  'text', 'math', 'code', 'diagram', 'interactive-sandbox'
+  'text', 'math', 'code', 'diagram', 'interactive-sandbox',
+  'heading', 'list', 'divider', 'footnote',
+  'callout', 'quote', 'key-concept', 'step-by-step',
+  'table', 'image-caption', 'video-embed', 'audio-player', 'gallery',
+  'fill-blanks', 'flash-card', 'toc', 'progress',
 ] as const;
 
 export type NodeType = string;
@@ -9,7 +18,7 @@ export type NodeType = string;
 export interface SlideNode {
   id: string;
   type: NodeType;
-  content: string;
+  content: any;
   language?: string;
   label?: string;
   meta?: Record<string, unknown>;
