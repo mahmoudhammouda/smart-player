@@ -27,6 +27,14 @@ import { FillBlanksNodeComponent } from '../fill-blanks-node/fill-blanks-node.co
 import { FlashCardNodeComponent } from '../flash-card-node/flash-card-node.component';
 import { TocNodeComponent } from '../toc-node/toc-node.component';
 import { ProgressNodeComponent } from '../progress-node/progress-node.component';
+import { ToggleListNodeComponent } from '../toggle-list-node/toggle-list-node.component';
+import { ChecklistNodeComponent } from '../checklist-node/checklist-node.component';
+import { MentionNodeComponent } from '../mention-node/mention-node.component';
+import { WebBookmarkNodeComponent } from '../web-bookmark-node/web-bookmark-node.component';
+import { ColumnsLayoutNodeComponent } from '../columns-layout-node/columns-layout-node.component';
+import { DataBoardNodeComponent } from '../data-board-node/data-board-node.component';
+import { ChemicalStructureNodeComponent } from '../chemical-structure-node/chemical-structure-node.component';
+import { FilePdfNodeComponent } from '../file-pdf-node/file-pdf-node.component';
 
 const NODE_TYPE_LABELS: Record<string, string> = {
   'text': 'Text',
@@ -51,11 +59,20 @@ const NODE_TYPE_LABELS: Record<string, string> = {
   'flash-card': 'Flash Cards',
   'toc': 'Contents',
   'progress': 'Progress',
+  'toggle-list': 'Toggle List',
+  'columns-layout': 'Columns',
+  'checklist': 'Checklist',
+  'data-board': 'Data Board',
+  'chemical-structure': 'Molecule',
+  'web-bookmark': 'Bookmark',
+  'file-pdf': 'PDF',
+  'mention': 'Mention',
 };
 
 const TEXT_LIKE_NODES = new Set([
   'text', 'heading', 'list', 'divider', 'footnote',
   'callout', 'quote', 'key-concept', 'progress',
+  'toggle-list', 'checklist', 'mention', 'web-bookmark',
 ]);
 
 @Component({
@@ -383,6 +400,14 @@ export class SmartPlayerComponent implements OnInit {
       ['flash-card', FlashCardNodeComponent, 'Flash Cards'],
       ['toc', TocNodeComponent, 'Contents'],
       ['progress', ProgressNodeComponent, 'Progress'],
+      ['toggle-list', ToggleListNodeComponent, 'Toggle List'],
+      ['checklist', ChecklistNodeComponent, 'Checklist'],
+      ['mention', MentionNodeComponent, 'Mention'],
+      ['web-bookmark', WebBookmarkNodeComponent, 'Bookmark'],
+      ['columns-layout', ColumnsLayoutNodeComponent, 'Columns'],
+      ['data-board', DataBoardNodeComponent, 'Data Board'],
+      ['chemical-structure', ChemicalStructureNodeComponent, 'Molecule'],
+      ['file-pdf', FilePdfNodeComponent, 'PDF'],
     ];
     for (const [type, component, label] of defaults) {
       if (!this.registry.has(type)) {

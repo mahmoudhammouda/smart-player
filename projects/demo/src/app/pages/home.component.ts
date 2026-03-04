@@ -48,7 +48,7 @@ import { MOCK_SCENARIOS } from '../data/mock-scenarios';
       <!-- ── FEATURES ── -->
       <section class="section">
         <h2 class="section-title">Everything you need to render LLM content</h2>
-        <p class="section-subtitle">22 built-in node types, dark mode, refine events, and a clean extension API.</p>
+        <p class="section-subtitle">30 built-in node types, dark mode, refine events, and a clean extension API.</p>
 
         <div class="features-grid">
           @for (feat of features; track feat.title) {
@@ -124,7 +124,7 @@ export class AppComponent &#123;
 
       <!-- ── NODE TYPES DICTIONARY ── -->
       <section class="section">
-        <h2 class="section-title">22 built-in node types</h2>
+        <h2 class="section-title">30 built-in node types</h2>
         <p class="section-subtitle">Each node type is rendered by a dedicated standalone component. Grouped by category.</p>
 
         @for (cat of nodeCategories; track cat.name) {
@@ -971,11 +971,13 @@ export class HomeComponent {
     {
       letter: 'A',
       name: 'Typography & Structure',
-      purpose: 'Narration — headings, paragraphs, lists, dividers, footnotes',
+      purpose: 'Narration — headings, paragraphs, lists, dividers, footnotes, toggles, columns',
       nodes: [
         { icon: 'H1', type: 'heading', name: 'Heading', lib: 'Angular Common', desc: 'Semantic H1/H2/H3 titles with configurable level.', contentFormat: 'string (heading text)', metaFields: 'level: 1 | 2 | 3' },
         { icon: 'Aa', type: 'text', name: 'Rich Text', lib: 'Custom Markdown', desc: 'Paragraphs with inline bold, italic, code, lists, and math.', contentFormat: 'string (Markdown)', metaFields: '' },
         { icon: '•', type: 'list', name: 'List', lib: 'Angular Common', desc: 'Ordered/unordered lists with nesting support.', contentFormat: 'string[] | {text, children}[]', metaFields: 'ordered: boolean' },
+        { icon: '▾', type: 'toggle-list', name: 'Toggle List', lib: 'CSS Transitions', desc: 'Accordion-style collapsible blocks. Multiple items can be open at once.', contentFormat: '{title: string, body: string}[]', metaFields: '' },
+        { icon: '⊟', type: 'columns-layout', name: 'Columns Layout', lib: 'CSS Grid', desc: 'Splits the content area into 2 or 3 columns, each with embedded child nodes.', contentFormat: 'SlideNode[][]', metaFields: 'columns?: 2 | 3' },
         { icon: '—', type: 'divider', name: 'Divider', lib: 'CSS', desc: 'Visual section separator: line, dots (· · ·), or stars.', contentFormat: 'empty string', metaFields: "style: 'line' | 'dots' | 'stars'" },
         { icon: '¹', type: 'footnote', name: 'Footnote', lib: 'CSS Typography', desc: 'Small, muted annotation with left accent border.', contentFormat: 'string (footnote text)', metaFields: '' },
       ]
@@ -983,34 +985,39 @@ export class HomeComponent {
     {
       letter: 'B',
       name: 'Pedagogical & Engagement',
-      purpose: 'Emphasis — callouts, quotes, key concepts, step-by-step guides',
+      purpose: 'Emphasis — callouts, quotes, key concepts, step-by-step guides, checklists',
       nodes: [
         { icon: 'ℹ', type: 'callout', name: 'Callout', lib: 'Lucide Icons + CSS', desc: 'Alert boxes with 5 variants: info, warning, error, tip, note.', contentFormat: 'string (message)', metaFields: "variant: 'info'|'warning'|'error'|'tip'|'note', title?: string" },
         { icon: '❝', type: 'quote', name: 'Quote', lib: 'CSS + Google Fonts', desc: 'Blockquote with serif styling, optional author and source.', contentFormat: 'string (quote text)', metaFields: 'author?: string, source?: string' },
         { icon: '💡', type: 'key-concept', name: 'Key Concept', lib: 'CSS Glassmorphism', desc: 'Highlighted term + definition card for important concepts.', contentFormat: 'string (definition)', metaFields: 'term: string' },
         { icon: '①', type: 'step-by-step', name: 'Step by Step', lib: 'Angular Common', desc: 'Vertical timeline with numbered steps connected by a lifeline.', contentFormat: '{title, description}[]', metaFields: '' },
+        { icon: '☑', type: 'checklist', name: 'Checklist', lib: 'Angular Signals', desc: 'Interactive task list with click-to-toggle checkboxes and completion counter.', contentFormat: '{text: string, checked: boolean}[]', metaFields: '' },
       ]
     },
     {
       letter: 'C',
       name: 'Scientific & Technical',
-      purpose: 'Expertise — formulas, code, diagrams, data tables',
+      purpose: 'Expertise — formulas, code, diagrams, data tables, molecules, boards',
       nodes: [
         { icon: 'Σ', type: 'math', name: 'Formula (LaTeX)', lib: 'KaTeX', desc: 'Display-mode math rendering with custom macros.', contentFormat: 'string (LaTeX)', metaFields: '' },
         { icon: '</>', type: 'code', name: 'Code Block', lib: 'Highlight.js', desc: 'Syntax-highlighted code with copy button and language label.', contentFormat: 'string (source code)', metaFields: '(uses language field)' },
         { icon: '◇', type: 'diagram', name: 'Diagram', lib: 'Mermaid.js', desc: 'Flowcharts, sequence, ER, class, and Gantt from text DSL.', contentFormat: 'string (Mermaid syntax)', metaFields: '' },
         { icon: '▦', type: 'table', name: 'Table', lib: 'CSS / Angular', desc: 'Data tables with striped rows, sticky header, responsive scroll.', contentFormat: '{headers: string[], rows: string[][]}', metaFields: 'caption?: string' },
+        { icon: '⬡', type: 'chemical-structure', name: 'Chemical Structure', lib: 'SmilesDrawer', desc: 'Molecular diagrams from SMILES notation. Supports benzene, caffeine, etc.', contentFormat: 'string (SMILES notation)', metaFields: 'name?: string, theme?: "light" | "dark"' },
+        { icon: '⊞', type: 'data-board', name: 'Data Board', lib: 'CSS Grid', desc: 'Kanban-style board with scrollable columns, cards, priorities, and tags.', contentFormat: '{columns: {title, color?, cards: {title, description?, tags?, priority?}[]}[]}', metaFields: '' },
       ]
     },
     {
       letter: 'D',
-      name: 'Multimedia & Illustrations',
-      purpose: 'Visual — images, video, audio, galleries',
+      name: 'Multimedia & Integrations',
+      purpose: 'Visual — images, video, audio, galleries, bookmarks, PDFs',
       nodes: [
         { icon: '🖼', type: 'image-caption', name: 'Image + Caption', lib: 'CSS Transform', desc: 'Centered image with rounded corners and optional caption.', contentFormat: 'string (image URL)', metaFields: 'caption?: string, alt?: string' },
         { icon: '▶', type: 'video-embed', name: 'Video Embed', lib: 'YouTube API / HTML5', desc: 'YouTube or HTML5 video with 16:9 responsive container.', contentFormat: 'string (video URL)', metaFields: "provider?: 'youtube' | 'html5'" },
         { icon: '♪', type: 'audio-player', name: 'Audio Player', lib: 'HTML5 Audio', desc: 'Native audio player with optional track title display.', contentFormat: 'string (audio URL)', metaFields: 'title?: string' },
         { icon: '⊞', type: 'gallery', name: 'Gallery', lib: 'CSS Grid', desc: 'Responsive image grid with captions, auto-fill layout.', contentFormat: '{url: string, caption?: string}[]', metaFields: '' },
+        { icon: '🔗', type: 'web-bookmark', name: 'Web Bookmark', lib: 'CSS Flex', desc: 'Enriched link preview card: title, description, image thumbnail, domain.', contentFormat: '{url, title, description?, image?, siteName?, favicon?}', metaFields: '' },
+        { icon: '📄', type: 'file-pdf', name: 'PDF Viewer', lib: 'iframe / DomSanitizer', desc: 'Embedded PDF document viewer with fallback download link.', contentFormat: 'string (PDF URL)', metaFields: 'height?: number, title?: string' },
       ]
     },
     {
@@ -1026,10 +1033,11 @@ export class HomeComponent {
     {
       letter: 'F',
       name: 'Navigation & Progression',
-      purpose: 'Meta — table of contents, progress markers',
+      purpose: 'Meta — table of contents, progress markers, internal mentions',
       nodes: [
         { icon: '≡', type: 'toc', name: 'Table of Contents', lib: 'Intersection Observer', desc: 'Dynamic summary with indented section titles by level.', contentFormat: '{title: string, level: number}[]', metaFields: '' },
         { icon: '✓', type: 'progress', name: 'Progress Anchor', lib: 'Angular Animations', desc: 'Clickable milestone marker with completed/pending state.', contentFormat: 'string (milestone text)', metaFields: 'completed?: boolean' },
+        { icon: '@', type: 'mention', name: 'Mention', lib: 'CSS / Angular', desc: 'Inline chip linking to a concept, chapter, or person. 4 color variants.', contentFormat: 'string (mention label)', metaFields: "href?: string, variant?: 'concept'|'chapter'|'person'|'tag'" },
       ]
     },
   ];

@@ -3,7 +3,9 @@ export type BuiltInNodeType =
   | 'heading' | 'list' | 'divider' | 'footnote'
   | 'callout' | 'quote' | 'key-concept' | 'step-by-step'
   | 'table' | 'image-caption' | 'video-embed' | 'audio-player' | 'gallery'
-  | 'fill-blanks' | 'flash-card' | 'toc' | 'progress';
+  | 'fill-blanks' | 'flash-card' | 'toc' | 'progress'
+  | 'toggle-list' | 'columns-layout' | 'checklist' | 'data-board'
+  | 'chemical-structure' | 'web-bookmark' | 'file-pdf' | 'mention';
 
 export const BUILT_IN_NODE_TYPES: readonly BuiltInNodeType[] = [
   'text', 'math', 'code', 'diagram', 'interactive-sandbox',
@@ -11,6 +13,8 @@ export const BUILT_IN_NODE_TYPES: readonly BuiltInNodeType[] = [
   'callout', 'quote', 'key-concept', 'step-by-step',
   'table', 'image-caption', 'video-embed', 'audio-player', 'gallery',
   'fill-blanks', 'flash-card', 'toc', 'progress',
+  'toggle-list', 'columns-layout', 'checklist', 'data-board',
+  'chemical-structure', 'web-bookmark', 'file-pdf', 'mention',
 ] as const;
 
 export type NodeType = string;

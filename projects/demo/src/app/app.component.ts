@@ -143,6 +143,7 @@ export class AppComponent {
       wave: '\u223C',
       rich: '\u{1F4DA}',
       quiz: '?',
+      notion: '\u{1F4D3}',
     };
     return icons[icon] || icon;
   }

@@ -1,64 +1,76 @@
 {
-  "hash": "2fdfd18d",
-  "configHash": "5af90cbb",
-  "lockfileHash": "5aa42755",
-  "browserHash": "6a908e4d",
+  "hash": "9d45811c",
+  "configHash": "8ada029e",
+  "lockfileHash": "b8048b87",
+  "browserHash": "61fb3629",
   "optimized": {
     "@angular/common": {
       "src": "../../../../../../node_modules/@angular/common/fesm2022/common.mjs",
       "file": "@angular_common.js",
-      "fileHash": "ac5f14b1",
+      "fileHash": "9177178a",
       "needsInterop": false
     },
     "@angular/core": {
       "src": "../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
       "file": "@angular_core.js",
-      "fileHash": "9b9e9efc",
+      "fileHash": "c62464de",
       "needsInterop": false
     },
     "@angular/core/rxjs-interop": {
       "src": "../../../../../../node_modules/@angular/core/fesm2022/rxjs-interop.mjs",
       "file": "@angular_core_rxjs-interop.js",
-      "fileHash": "fc631a49",
+      "fileHash": "da2fa85a",
       "needsInterop": false
     },
     "@angular/platform-browser": {
       "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
       "file": "@angular_platform-browser.js",
-      "fileHash": "d21d94e6",
+      "fileHash": "aeb5576a",
       "needsInterop": false
     },
     "@angular/router": {
       "src": "../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
       "file": "@angular_router.js",
-      "fileHash": "0d4ec3fb",
+      "fileHash": "1525680d",
       "needsInterop": false
     },
     "highlight.js": {
       "src": "../../../../../../node_modules/highlight.js/es/index.js",
       "file": "highlight__js.js",
-      "fileHash": "f4f6abe0",
+      "fileHash": "82b99094",
       "needsInterop": false
     },
     "katex": {
       "src": "../../../../../../node_modules/katex/dist/katex.mjs",
       "file": "katex.js",
-      "fileHash": "d7010712",
+      "fileHash": "ba29468e",
       "needsInterop": false
     },
     "mermaid": {
       "src": "../../../../../../node_modules/mermaid/dist/mermaid.core.mjs",
       "file": "mermaid.js",
-      "fileHash": "442bdabb",
+      "fileHash": "9fbd1eaa",
       "needsInterop": false
+    },
+    "smiles-drawer": {
+      "src": "../../../../../../node_modules/smiles-drawer/app.js",
+      "file": "smiles-drawer.js",
+      "fileHash": "6c0e01d7",
+      "needsInterop": true
     }
   },
   "chunks": {
-    "architectureDiagram-VXUJARFQ-RSIJJRKX": {
-      "file": "architectureDiagram-VXUJARFQ-RSIJJRKX.js"
+    "blockDiagram-VD42YOAC-VYXBV4NR": {
+      "file": "blockDiagram-VD42YOAC-VYXBV4NR.js"
     },
-    "diagram-PSM6KHXK-WYG67JSR": {
-      "file": "diagram-PSM6KHXK-WYG67JSR.js"
+    "architectureDiagram-VXUJARFQ-YE754AXF": {
+      "file": "architectureDiagram-VXUJARFQ-YE754AXF.js"
+    },
+    "diagram-PSM6KHXK-7L7NB47Q": {
+      "file": "diagram-PSM6KHXK-7L7NB47Q.js"
+    },
+    "stateDiagram-v2-4FDKWEC3-O5LLJR4O": {
+      "file": "stateDiagram-v2-4FDKWEC3-O5LLJR4O.js"
     },
     "journeyDiagram-XKPGCS4Q-5HHNW7T5": {
       "file": "journeyDiagram-XKPGCS4Q-5HHNW7T5.js"
@@ -66,23 +78,23 @@
     "timeline-definition-IT6M3QCI-CMVXCTL6": {
       "file": "timeline-definition-IT6M3QCI-CMVXCTL6.js"
     },
-    "mindmap-definition-VGOIOE7T-O7N7QRCV": {
-      "file": "mindmap-definition-VGOIOE7T-O7N7QRCV.js"
+    "mindmap-definition-VGOIOE7T-IGHBTIPC": {
+      "file": "mindmap-definition-VGOIOE7T-IGHBTIPC.js"
     },
-    "kanban-definition-3W4ZIXB7-7GJ7PREX": {
-      "file": "kanban-definition-3W4ZIXB7-7GJ7PREX.js"
+    "kanban-definition-3W4ZIXB7-MYZ56GSM": {
+      "file": "kanban-definition-3W4ZIXB7-MYZ56GSM.js"
     },
     "sankeyDiagram-TZEHDZUN-QYBAK5FX": {
       "file": "sankeyDiagram-TZEHDZUN-QYBAK5FX.js"
     },
-    "diagram-S2PKOQOG-MHDZF5K4": {
-      "file": "diagram-S2PKOQOG-MHDZF5K4.js"
+    "diagram-S2PKOQOG-B43ZT4XS": {
+      "file": "diagram-S2PKOQOG-B43ZT4XS.js"
     },
-    "diagram-QEK2KX5R-TGVRJFPH": {
-      "file": "diagram-QEK2KX5R-TGVRJFPH.js"
+    "diagram-QEK2KX5R-LTD7IF7A": {
+      "file": "diagram-QEK2KX5R-LTD7IF7A.js"
     },
-    "blockDiagram-VD42YOAC-VYXBV4NR": {
-      "file": "blockDiagram-VD42YOAC-VYXBV4NR.js"
+    "pieDiagram-ADFJNKIX-RG6PAGJY": {
+      "file": "pieDiagram-ADFJNKIX-RG6PAGJY.js"
     },
     "quadrantDiagram-AYHSOK5B-KIQT7JF7": {
       "file": "quadrantDiagram-AYHSOK5B-KIQT7JF7.js"
@@ -90,29 +102,29 @@
     "xychartDiagram-PRI3JC2R-3XZQP3MF": {
       "file": "xychartDiagram-PRI3JC2R-3XZQP3MF.js"
     },
-    "requirementDiagram-UZGBJVZJ-MCBMTYST": {
-      "file": "requirementDiagram-UZGBJVZJ-MCBMTYST.js"
+    "requirementDiagram-UZGBJVZJ-VA2KMULY": {
+      "file": "requirementDiagram-UZGBJVZJ-VA2KMULY.js"
     },
     "sequenceDiagram-WL72ISMW-FCELYLT4": {
       "file": "sequenceDiagram-WL72ISMW-FCELYLT4.js"
     },
-    "classDiagram-2ON5EDUG-R2T6AZ2D": {
-      "file": "classDiagram-2ON5EDUG-R2T6AZ2D.js"
+    "classDiagram-2ON5EDUG-6TWJUX3Y": {
+      "file": "classDiagram-2ON5EDUG-6TWJUX3Y.js"
     },
-    "classDiagram-v2-WZHVMYZB-7KB2TD7D": {
-      "file": "classDiagram-v2-WZHVMYZB-7KB2TD7D.js"
+    "classDiagram-v2-WZHVMYZB-2PBZSTYA": {
+      "file": "classDiagram-v2-WZHVMYZB-2PBZSTYA.js"
     },
-    "chunk-4CZUP4BD": {
-      "file": "chunk-4CZUP4BD.js"
+    "chunk-LCXLA3XJ": {
+      "file": "chunk-LCXLA3XJ.js"
     },
-    "stateDiagram-FKZM4ZOC-YEBSUIBA": {
-      "file": "stateDiagram-FKZM4ZOC-YEBSUIBA.js"
+    "stateDiagram-FKZM4ZOC-GBGMLSLW": {
+      "file": "stateDiagram-FKZM4ZOC-GBGMLSLW.js"
     },
-    "stateDiagram-v2-4FDKWEC3-PEAWRLPK": {
-      "file": "stateDiagram-v2-4FDKWEC3-PEAWRLPK.js"
+    "chunk-LQWQ6TGN": {
+      "file": "chunk-LQWQ6TGN.js"
     },
-    "chunk-TCXG3E4S": {
-      "file": "chunk-TCXG3E4S.js"
+    "pie-VRWISCQL-3F6MPIGP": {
+      "file": "pie-VRWISCQL-3F6MPIGP.js"
     },
     "architecture-7HQA4BMR-SGLYKADN": {
       "file": "architecture-7HQA4BMR-SGLYKADN.js"
@@ -126,8 +138,11 @@
     "treemap-GDKQZRPO-QC2DW257": {
       "file": "treemap-GDKQZRPO-QC2DW257.js"
     },
-    "gitGraphDiagram-V2S2FVAM-WGQZLN3Z": {
-      "file": "gitGraphDiagram-V2S2FVAM-WGQZLN3Z.js"
+    "gitGraphDiagram-V2S2FVAM-ZVWJLFZC": {
+      "file": "gitGraphDiagram-V2S2FVAM-ZVWJLFZC.js"
+    },
+    "chunk-ILVE6SST": {
+      "file": "chunk-ILVE6SST.js"
     },
     "chunk-JE5LMYFZ": {
       "file": "chunk-JE5LMYFZ.js"
@@ -135,17 +150,14 @@
     "ganttDiagram-JELNMOA3-PDRPTHWC": {
       "file": "ganttDiagram-JELNMOA3-PDRPTHWC.js"
     },
-    "infoDiagram-HS3SLOUP-PZEYXW3S": {
-      "file": "infoDiagram-HS3SLOUP-PZEYXW3S.js"
+    "infoDiagram-HS3SLOUP-7KMBUN2L": {
+      "file": "infoDiagram-HS3SLOUP-7KMBUN2L.js"
     },
-    "pieDiagram-ADFJNKIX-JSTAHUIW": {
-      "file": "pieDiagram-ADFJNKIX-JSTAHUIW.js"
+    "chunk-SB5N2VGZ": {
+      "file": "chunk-SB5N2VGZ.js"
     },
-    "chunk-ILVE6SST": {
-      "file": "chunk-ILVE6SST.js"
-    },
-    "chunk-D3TW6KBH": {
-      "file": "chunk-D3TW6KBH.js"
+    "chunk-N3FBMHYR": {
+      "file": "chunk-N3FBMHYR.js"
     },
     "chunk-HWO6W3NN": {
       "file": "chunk-HWO6W3NN.js"
@@ -159,8 +171,8 @@
     "chunk-WIGO7OX6": {
       "file": "chunk-WIGO7OX6.js"
     },
-    "dagre-6UL2VRFP-ZCQVW7W2": {
-      "file": "dagre-6UL2VRFP-ZCQVW7W2.js"
+    "dagre-6UL2VRFP-A25ODSZK": {
+      "file": "dagre-6UL2VRFP-A25ODSZK.js"
     },
     "chunk-GRLTXOAI": {
       "file": "chunk-GRLTXOAI.js"
@@ -180,14 +192,14 @@
     "chunk-AUZFKC6A": {
       "file": "chunk-AUZFKC6A.js"
     },
-    "flowDiagram-NV44I4VS-OSQVVR4P": {
-      "file": "flowDiagram-NV44I4VS-OSQVVR4P.js"
+    "flowDiagram-NV44I4VS-AMPYRJOC": {
+      "file": "flowDiagram-NV44I4VS-AMPYRJOC.js"
     },
     "chunk-KDG3XFFT": {
       "file": "chunk-KDG3XFFT.js"
     },
-    "erDiagram-Q2GNP2WA-MHJ7U267": {
-      "file": "erDiagram-Q2GNP2WA-MHJ7U267.js"
+    "erDiagram-Q2GNP2WA-SYKQWWSK": {
+      "file": "erDiagram-Q2GNP2WA-SYKQWWSK.js"
     },
     "chunk-LAOYJGHJ": {
       "file": "chunk-LAOYJGHJ.js"
@@ -207,12 +219,6 @@
     "chunk-QAFOLWMV": {
       "file": "chunk-QAFOLWMV.js"
     },
-    "pie-VRWISCQL-3F6MPIGP": {
-      "file": "pie-VRWISCQL-3F6MPIGP.js"
-    },
-    "chunk-N3FBMHYR": {
-      "file": "chunk-N3FBMHYR.js"
-    },
     "chunk-4XN5BJJL": {
       "file": "chunk-4XN5BJJL.js"
     },
@@ -225,6 +231,9 @@
     "chunk-LWWFKT6U": {
       "file": "chunk-LWWFKT6U.js"
     },
+    "chunk-YDUYUA7Y": {
+      "file": "chunk-YDUYUA7Y.js"
+    },
     "chunk-JSKLGOKY": {
       "file": "chunk-JSKLGOKY.js"
     },
@@ -234,23 +243,23 @@
     "chunk-F3U74UJN": {
       "file": "chunk-F3U74UJN.js"
     },
-    "chunk-QJL7DHEO": {
-      "file": "chunk-QJL7DHEO.js"
+    "chunk-6OS5M2VZ": {
+      "file": "chunk-6OS5M2VZ.js"
     },
-    "chunk-53P3UUFG": {
-      "file": "chunk-53P3UUFG.js"
-    },
-    "chunk-4EOMMTBT": {
-      "file": "chunk-4EOMMTBT.js"
-    },
-    "chunk-WIF6GQYV": {
-      "file": "chunk-WIF6GQYV.js"
+    "chunk-BT7XNFJI": {
+      "file": "chunk-BT7XNFJI.js"
     },
     "chunk-T7VA5XL6": {
       "file": "chunk-T7VA5XL6.js"
     },
+    "chunk-EOQ2FASH": {
+      "file": "chunk-EOQ2FASH.js"
+    },
     "chunk-FW7BXNVI": {
       "file": "chunk-FW7BXNVI.js"
+    },
+    "chunk-WIF6GQYV": {
+      "file": "chunk-WIF6GQYV.js"
     },
     "chunk-REZAT3SI": {
       "file": "chunk-REZAT3SI.js"
@@ -272,9 +281,6 @@
     },
     "chunk-S3PAIZX7": {
       "file": "chunk-S3PAIZX7.js"
-    },
-    "chunk-YDUYUA7Y": {
-      "file": "chunk-YDUYUA7Y.js"
     },
     "chunk-5PDL3II3": {
       "file": "chunk-5PDL3II3.js"

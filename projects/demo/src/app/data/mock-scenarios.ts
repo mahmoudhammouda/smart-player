@@ -570,4 +570,190 @@ for name, au in planets.items():
       ],
     },
   },
+  {
+    id: 'notion-demo',
+    name: 'Notion-Style Layout',
+    icon: 'notion',
+    description: 'All 8 new node types: toggles, checklists, boards, molecules, PDFs & more',
+    slide: {
+      id: 'slide-notion-1',
+      title: 'Notion-Level Content Types',
+      description: 'Demonstrating the 8 new node types that bring SmartPlayer to Notion-level richness.',
+      tags: ['notion', 'layout', 'chemistry', 'kanban', 'checklist'],
+      nodes: [
+        {
+          id: 'nn1',
+          type: 'heading',
+          content: 'Collapsible & Interactive Content',
+          meta: { level: 2 },
+        },
+        {
+          id: 'nn2',
+          type: 'toggle-list',
+          label: 'FAQ Accordion',
+          content: [
+            { title: 'What is SmartPlayer?', body: 'SmartPlayer is an Angular 19+ library that renders structured JSON slides from LLMs into richly formatted educational content using a Continuous Document UI.' },
+            { title: 'How do I add custom node types?', body: 'Use the SP_CUSTOM_NODES injection token to register your own standalone Angular components. No library source modifications required.' },
+            { title: 'Does it support dark mode?', body: 'Yes! All 30 node types respect the --sp-* CSS custom properties and automatically adapt when the .dark class is applied to the host element.' },
+          ],
+        },
+        {
+          id: 'nn3',
+          type: 'checklist',
+          label: 'Setup Checklist',
+          content: [
+            { text: 'Install smart-player via npm', checked: true },
+            { text: 'Import SmartPlayerComponent into your standalone component', checked: true },
+            { text: 'Bind a Slide object with your JSON nodes', checked: false },
+            { text: 'Wire up the (refine) output to your LLM API', checked: false },
+          ],
+        },
+        {
+          id: 'nn4',
+          type: 'heading',
+          content: 'Multi-Column Layout',
+          meta: { level: 2 },
+        },
+        {
+          id: 'nn5',
+          type: 'columns-layout',
+          label: '2-Column: Text + Formula',
+          content: [
+            [
+              { id: 'col1n1', type: 'text', content: '**Euler\'s Identity** is often called the most beautiful equation in mathematics. It connects five fundamental constants of mathematics in one elegant expression.' },
+              { id: 'col1n2', type: 'callout', content: 'This identity was published by Leonhard Euler in 1748 in his *Introductio in analysin infinitorum*.', meta: { variant: 'tip', title: 'Historical Note' } },
+            ],
+            [
+              { id: 'col2n1', type: 'math', content: 'e^{i\\pi} + 1 = 0' },
+              { id: 'col2n2', type: 'math', content: 'e^{i\\theta} = \\cos\\theta + i\\sin\\theta' },
+            ],
+          ],
+          meta: { columns: 2 },
+        },
+        {
+          id: 'nn6',
+          type: 'heading',
+          content: 'Chemistry & Science',
+          meta: { level: 2 },
+        },
+        {
+          id: 'nn7',
+          type: 'columns-layout',
+          label: 'Common Molecules',
+          content: [
+            [
+              { id: 'mol1', type: 'chemical-structure', content: 'c1ccccc1', meta: { name: 'Benzene' } },
+            ],
+            [
+              { id: 'mol2', type: 'chemical-structure', content: 'CC(=O)O', meta: { name: 'Acetic Acid' } },
+            ],
+            [
+              { id: 'mol3', type: 'chemical-structure', content: 'CN1C=NC2=C1C(=O)N(C(=O)N2C)C', meta: { name: 'Caffeine' } },
+            ],
+          ],
+          meta: { columns: 3 },
+        },
+        {
+          id: 'nn8',
+          type: 'heading',
+          content: 'Project Management Board',
+          meta: { level: 2 },
+        },
+        {
+          id: 'nn9',
+          type: 'data-board',
+          label: 'Sprint Board',
+          content: {
+            columns: [
+              {
+                title: 'Backlog',
+                color: '#6b7280',
+                cards: [
+                  { title: 'User authentication module', description: 'Implement OAuth2 login flow with Google and GitHub', tags: ['auth', 'backend'], priority: 'medium' },
+                  { title: 'Dashboard analytics', description: 'Add usage statistics and charts', tags: ['frontend'], priority: 'low' },
+                ],
+              },
+              {
+                title: 'In Progress',
+                color: '#f59e0b',
+                cards: [
+                  { title: 'SmartPlayer v2 node types', description: 'Implement 8 new Notion-level node components', tags: ['library', 'angular'], priority: 'high' },
+                  { title: 'Dark mode support', description: 'CSS variable based theming', tags: ['design', 'css'], priority: 'medium' },
+                ],
+              },
+              {
+                title: 'Done',
+                color: '#10b981',
+                cards: [
+                  { title: 'Initial library setup', description: 'Angular workspace with smart-player project', tags: ['setup'], priority: 'high' },
+                  { title: '22 base node types', description: 'Typography, scientific, multimedia, interactive', tags: ['library'], priority: 'high' },
+                ],
+              },
+            ],
+          },
+        },
+        {
+          id: 'nn10',
+          type: 'heading',
+          content: 'External Links & Documents',
+          meta: { level: 2 },
+        },
+        {
+          id: 'nn11',
+          type: 'web-bookmark',
+          label: 'Angular Documentation',
+          content: {
+            url: 'https://angular.dev',
+            title: 'Angular — The web development framework for building the future',
+            description: 'Angular is a platform for building mobile and desktop web applications. Powered by TypeScript and a rich ecosystem of tools.',
+            image: 'https://angular.dev/assets/images/ng-image.jpg',
+            siteName: 'angular.dev',
+            favicon: 'https://angular.dev/favicon.ico',
+          },
+        },
+        {
+          id: 'nn12',
+          type: 'file-pdf',
+          label: 'Sample PDF Document',
+          content: 'https://www.w3.org/WAI/WCAG21/wcag-2.1.pdf',
+          meta: { height: 500, title: 'WCAG 2.1 Guidelines' },
+        },
+        {
+          id: 'nn13',
+          type: 'heading',
+          content: 'Internal References',
+          meta: { level: 2 },
+        },
+        {
+          id: 'nn14',
+          type: 'text',
+          content: 'You can tag related concepts inline using mention nodes. For example, this document references the following topics:',
+        },
+        {
+          id: 'nn15',
+          type: 'mention',
+          content: 'Angular Signals',
+          meta: { variant: 'concept', href: 'https://angular.dev/guide/signals' },
+        },
+        {
+          id: 'nn16',
+          type: 'mention',
+          content: 'Chapter 3: LaTeX Formulas',
+          meta: { variant: 'chapter' },
+        },
+        {
+          id: 'nn17',
+          type: 'mention',
+          content: 'Leonhard Euler',
+          meta: { variant: 'person', href: 'https://en.wikipedia.org/wiki/Leonhard_Euler' },
+        },
+        {
+          id: 'nn18',
+          type: 'mention',
+          content: 'mathematics',
+          meta: { variant: 'tag' },
+        },
+      ],
+    },
+  },
 ];
