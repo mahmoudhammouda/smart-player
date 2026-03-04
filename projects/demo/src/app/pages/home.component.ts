@@ -48,7 +48,7 @@ import { MOCK_SCENARIOS } from '../data/mock-scenarios';
       <!-- ── FEATURES ── -->
       <section class="section">
         <h2 class="section-title">Everything you need to render LLM content</h2>
-        <p class="section-subtitle">Five built-in node types, dark mode, refine events, and a clean extension API.</p>
+        <p class="section-subtitle">22 built-in node types, dark mode, refine events, and a clean extension API.</p>
 
         <div class="features-grid">
           @for (feat of features; track feat.title) {
@@ -122,26 +122,56 @@ export class AppComponent &#123;
         </div>
       </section>
 
-      <!-- ── NODE TYPES ── -->
+      <!-- ── NODE TYPES DICTIONARY ── -->
       <section class="section">
-        <h2 class="section-title">Five built-in node types</h2>
-        <p class="section-subtitle">Each node type is rendered by a dedicated standalone component.</p>
+        <h2 class="section-title">22 built-in node types</h2>
+        <p class="section-subtitle">Each node type is rendered by a dedicated standalone component. Grouped by category.</p>
 
-        <div class="node-types-grid">
-          @for (n of nodeTypes; track n.type) {
-            <div class="node-type-card">
-              <div class="node-type-header">
-                <span class="node-type-icon">{{ n.icon }}</span>
-                <div>
-                  <div class="node-type-name">{{ n.name }}</div>
-                  <div class="node-type-badge">type: "{{ n.type }}"</div>
-                </div>
+        @for (cat of nodeCategories; track cat.name) {
+          <div class="node-cat">
+            <div class="node-cat-header">
+              <span class="node-cat-letter">{{ cat.letter }}</span>
+              <div>
+                <h3 class="node-cat-name">{{ cat.name }}</h3>
+                <p class="node-cat-desc">{{ cat.purpose }}</p>
               </div>
-              <p class="node-type-desc">{{ n.desc }}</p>
-              <div class="node-type-powered">Powered by <strong>{{ n.lib }}</strong></div>
             </div>
-          }
-        </div>
+
+            <div class="node-types-grid">
+              @for (n of cat.nodes; track n.type) {
+                <div class="node-type-card">
+                  <div class="node-type-header">
+                    <span class="node-type-icon">{{ n.icon }}</span>
+                    <div>
+                      <div class="node-type-name">{{ n.name }}</div>
+                      <div class="node-type-badge">type: "{{ n.type }}"</div>
+                    </div>
+                  </div>
+                  <p class="node-type-desc">{{ n.desc }}</p>
+                  <div class="node-type-meta">
+                    <div class="node-type-powered">Powered by <strong>{{ n.lib }}</strong></div>
+                  </div>
+                  @if (n.contentFormat || n.metaFields) {
+                    <div class="node-type-schema">
+                      @if (n.contentFormat) {
+                        <div class="schema-row">
+                          <span class="schema-label">content</span>
+                          <code class="schema-value">{{ n.contentFormat }}</code>
+                        </div>
+                      }
+                      @if (n.metaFields) {
+                        <div class="schema-row">
+                          <span class="schema-label">meta</span>
+                          <code class="schema-value">{{ n.metaFields }}</code>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
       </section>
 
       <!-- ── EXTENSIBILITY ── -->
@@ -530,11 +560,51 @@ export const appConfig = &#123;
       color: #e2e8f0;
     }
 
-    /* ── Node types ── */
+    /* ── Node categories ── */
+    .node-cat {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .node-cat-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .node-cat-letter {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      background: var(--primary, #3b82f6);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .node-cat-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--fg, #1e293b);
+      margin: 0;
+    }
+
+    .node-cat-desc {
+      font-size: 0.78rem;
+      color: var(--muted-fg, #64748b);
+      margin: 2px 0 0;
+    }
+
+    /* ── Node types grid ── */
     .node-types-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
     }
 
     .node-type-card {
@@ -544,7 +614,7 @@ export const appConfig = &#123;
       border: 1px solid var(--card-border, #f0f2f5);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .node-type-header {
@@ -554,45 +624,86 @@ export const appConfig = &#123;
     }
 
     .node-type-icon {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 8px;
       background: color-mix(in srgb, var(--primary, #3b82f6) 10%, transparent);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
+      font-size: 0.95rem;
       flex-shrink: 0;
     }
 
     .node-type-name {
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: var(--fg, #1e293b);
     }
 
     .node-type-badge {
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       font-family: 'Fira Code', monospace;
       color: var(--muted-fg, #94a3b8);
       margin-top: 1px;
     }
 
     .node-type-desc {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: var(--muted-fg, #64748b);
       line-height: 1.55;
       margin: 0;
       flex: 1;
     }
 
+    .node-type-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .node-type-powered {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--muted-fg, #94a3b8);
     }
 
     .node-type-powered strong {
       color: var(--fg, #475569);
+    }
+
+    .node-type-schema {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: color-mix(in srgb, var(--primary, #3b82f6) 4%, transparent);
+      border: 1px solid color-mix(in srgb, var(--primary, #3b82f6) 10%, transparent);
+    }
+
+    .schema-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .schema-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--primary, #3b82f6);
+      min-width: 52px;
+      flex-shrink: 0;
+    }
+
+    .schema-value {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.66rem;
+      color: var(--muted-fg, #64748b);
+      background: none;
+      padding: 0;
+      word-break: break-word;
     }
 
     /* ── Extensibility ── */
@@ -816,6 +927,8 @@ export const appConfig = &#123;
     :host-context(.dark) .section-title { color: #f1f5f9; }
     :host-context(.dark) .feature-card { background: #1e293b; border-color: #334155; }
     :host-context(.dark) .node-type-card { background: #1e293b; border-color: #334155; }
+    :host-context(.dark) .node-cat-name { color: #f1f5f9; }
+    :host-context(.dark) .node-type-schema { background: rgba(59,130,246,0.06); border-color: rgba(59,130,246,0.12); }
     :host-context(.dark) .demo-card { background: #1e293b; border-color: #334155; }
     :host-context(.dark) .install-box { background: #1e293b; border-color: #334155; }
     :host-context(.dark) .install-cmd { color: #e2e8f0; }
@@ -846,7 +959,7 @@ export class HomeComponent {
   copied = signal(false);
 
   features = [
-    { icon: 'Aa', title: 'Rich Text', tag: 'type: text', desc: 'Markdown-aware paragraphs, bold/italic/inline code, bullet lists, and more.' },
+    { icon: 'Aa', title: '22 Node Types', tag: '6 categories', desc: 'Typography, pedagogy, science, multimedia, interactive, and navigation — all built in.' },
     { icon: 'Σ', title: 'KaTeX Math', tag: 'type: math', desc: 'Beautiful typeset equations in display and inline mode with custom macros.' },
     { icon: '</>', title: 'Syntax Highlighting', tag: 'type: code', desc: 'Highlight.js powered code blocks with copy-to-clipboard and language label.' },
     { icon: '◇', title: 'Mermaid Diagrams', tag: 'type: diagram', desc: 'Flowcharts, sequence diagrams, ER diagrams, and Gantt charts from text.' },
@@ -854,12 +967,71 @@ export class HomeComponent {
     { icon: '✨', title: 'Node Refinement', tag: '@refine output', desc: 'Each node emits a RefineEvent so you can send it back to an LLM for targeted regeneration.' },
   ];
 
-  nodeTypes = [
-    { icon: 'Aa', type: 'text', name: 'Text', lib: 'Custom Markdown parser', desc: 'Renders paragraphs with inline Markdown: **bold**, *italic*, `code`, and - bullet lists.' },
-    { icon: 'Σ', type: 'math', name: 'Math', lib: 'KaTeX', desc: 'Renders LaTeX expressions in display mode. Supports multi-line equations and custom macros.' },
-    { icon: '</>', type: 'code', name: 'Code', lib: 'Highlight.js', desc: 'Syntax-highlighted code block with auto language detection, language label, and copy button.' },
-    { icon: '◇', type: 'diagram', name: 'Diagram', lib: 'Mermaid.js', desc: 'Converts Mermaid DSL text into SVG diagrams: flowchart, sequence, class, ER, and more.' },
-    { icon: '⚡', type: 'interactive-sandbox', name: 'Sandbox', lib: 'secure iframe', desc: 'Renders an arbitrary HTML/CSS/JS document inside a sandboxed iframe with allow-scripts.' },
+  nodeCategories = [
+    {
+      letter: 'A',
+      name: 'Typography & Structure',
+      purpose: 'Narration — headings, paragraphs, lists, dividers, footnotes',
+      nodes: [
+        { icon: 'H1', type: 'heading', name: 'Heading', lib: 'Angular Common', desc: 'Semantic H1/H2/H3 titles with configurable level.', contentFormat: 'string (heading text)', metaFields: 'level: 1 | 2 | 3' },
+        { icon: 'Aa', type: 'text', name: 'Rich Text', lib: 'Custom Markdown', desc: 'Paragraphs with inline bold, italic, code, lists, and math.', contentFormat: 'string (Markdown)', metaFields: '' },
+        { icon: '•', type: 'list', name: 'List', lib: 'Angular Common', desc: 'Ordered/unordered lists with nesting support.', contentFormat: 'string[] | {text, children}[]', metaFields: 'ordered: boolean' },
+        { icon: '—', type: 'divider', name: 'Divider', lib: 'CSS', desc: 'Visual section separator: line, dots (· · ·), or stars.', contentFormat: 'empty string', metaFields: "style: 'line' | 'dots' | 'stars'" },
+        { icon: '¹', type: 'footnote', name: 'Footnote', lib: 'CSS Typography', desc: 'Small, muted annotation with left accent border.', contentFormat: 'string (footnote text)', metaFields: '' },
+      ]
+    },
+    {
+      letter: 'B',
+      name: 'Pedagogical & Engagement',
+      purpose: 'Emphasis — callouts, quotes, key concepts, step-by-step guides',
+      nodes: [
+        { icon: 'ℹ', type: 'callout', name: 'Callout', lib: 'Lucide Icons + CSS', desc: 'Alert boxes with 5 variants: info, warning, error, tip, note.', contentFormat: 'string (message)', metaFields: "variant: 'info'|'warning'|'error'|'tip'|'note', title?: string" },
+        { icon: '❝', type: 'quote', name: 'Quote', lib: 'CSS + Google Fonts', desc: 'Blockquote with serif styling, optional author and source.', contentFormat: 'string (quote text)', metaFields: 'author?: string, source?: string' },
+        { icon: '💡', type: 'key-concept', name: 'Key Concept', lib: 'CSS Glassmorphism', desc: 'Highlighted term + definition card for important concepts.', contentFormat: 'string (definition)', metaFields: 'term: string' },
+        { icon: '①', type: 'step-by-step', name: 'Step by Step', lib: 'Angular Common', desc: 'Vertical timeline with numbered steps connected by a lifeline.', contentFormat: '{title, description}[]', metaFields: '' },
+      ]
+    },
+    {
+      letter: 'C',
+      name: 'Scientific & Technical',
+      purpose: 'Expertise — formulas, code, diagrams, data tables',
+      nodes: [
+        { icon: 'Σ', type: 'math', name: 'Formula (LaTeX)', lib: 'KaTeX', desc: 'Display-mode math rendering with custom macros.', contentFormat: 'string (LaTeX)', metaFields: '' },
+        { icon: '</>', type: 'code', name: 'Code Block', lib: 'Highlight.js', desc: 'Syntax-highlighted code with copy button and language label.', contentFormat: 'string (source code)', metaFields: '(uses language field)' },
+        { icon: '◇', type: 'diagram', name: 'Diagram', lib: 'Mermaid.js', desc: 'Flowcharts, sequence, ER, class, and Gantt from text DSL.', contentFormat: 'string (Mermaid syntax)', metaFields: '' },
+        { icon: '▦', type: 'table', name: 'Table', lib: 'CSS / Angular', desc: 'Data tables with striped rows, sticky header, responsive scroll.', contentFormat: '{headers: string[], rows: string[][]}', metaFields: 'caption?: string' },
+      ]
+    },
+    {
+      letter: 'D',
+      name: 'Multimedia & Illustrations',
+      purpose: 'Visual — images, video, audio, galleries',
+      nodes: [
+        { icon: '🖼', type: 'image-caption', name: 'Image + Caption', lib: 'CSS Transform', desc: 'Centered image with rounded corners and optional caption.', contentFormat: 'string (image URL)', metaFields: 'caption?: string, alt?: string' },
+        { icon: '▶', type: 'video-embed', name: 'Video Embed', lib: 'YouTube API / HTML5', desc: 'YouTube or HTML5 video with 16:9 responsive container.', contentFormat: 'string (video URL)', metaFields: "provider?: 'youtube' | 'html5'" },
+        { icon: '♪', type: 'audio-player', name: 'Audio Player', lib: 'HTML5 Audio', desc: 'Native audio player with optional track title display.', contentFormat: 'string (audio URL)', metaFields: 'title?: string' },
+        { icon: '⊞', type: 'gallery', name: 'Gallery', lib: 'CSS Grid', desc: 'Responsive image grid with captions, auto-fill layout.', contentFormat: '{url: string, caption?: string}[]', metaFields: '' },
+      ]
+    },
+    {
+      letter: 'E',
+      name: 'Interactive & Evaluation',
+      purpose: 'Verification — sandboxes, exercises, flash cards',
+      nodes: [
+        { icon: '⚡', type: 'interactive-sandbox', name: 'Sandbox', lib: 'Shadow DOM / iframe', desc: 'Isolated HTML/JS/CSS sandbox with allow-scripts permission.', contentFormat: 'string (HTML document)', metaFields: '' },
+        { icon: '✎', type: 'fill-blanks', name: 'Fill in the Blanks', lib: 'Angular Signals', desc: 'Inline input fields for blanks; validates answers on submit.', contentFormat: 'string with ___answer___ markers', metaFields: '' },
+        { icon: '↻', type: 'flash-card', name: 'Flash Card', lib: 'CSS 3D Transforms', desc: 'Click-to-flip cards with front/back and prev/next navigation.', contentFormat: '{front: string, back: string}[]', metaFields: '' },
+      ]
+    },
+    {
+      letter: 'F',
+      name: 'Navigation & Progression',
+      purpose: 'Meta — table of contents, progress markers',
+      nodes: [
+        { icon: '≡', type: 'toc', name: 'Table of Contents', lib: 'Intersection Observer', desc: 'Dynamic summary with indented section titles by level.', contentFormat: '{title: string, level: number}[]', metaFields: '' },
+        { icon: '✓', type: 'progress', name: 'Progress Anchor', lib: 'Angular Animations', desc: 'Clickable milestone marker with completed/pending state.', contentFormat: 'string (milestone text)', metaFields: 'completed?: boolean' },
+      ]
+    },
   ];
 
   apiRef = [
@@ -870,7 +1042,7 @@ export class HomeComponent {
 
   getIcon(icon: string): string {
     const icons: Record<string, string> = {
-      function: 'Σ', history: '⌚', tree: '🌲', wave: '∼', quiz: '?'
+      function: 'Σ', history: '⌚', tree: '🌲', wave: '∼', rich: '📚', quiz: '?'
     };
     return icons[icon] || icon;
   }
