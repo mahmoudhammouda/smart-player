@@ -137,6 +137,13 @@ import { SmartPlayerComponent, Slide, validateSlide, ValidationIssue } from 'sma
             </div>
           </div>
 
+          @if (scenarioUnwrapped()) {
+            <div class="scenario-notice" data-testid="notice-scenario-unwrapped">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              Format Scénario détecté — le champ <code>slide</code> a été extrait automatiquement. La validation porte sur la slide imbriquée.
+            </div>
+          }
+
           @if (liveIssues().length > 0) {
             <div class="issues-panel" data-testid="panel-validation-issues">
               <div class="issues-panel-header">
@@ -341,6 +348,27 @@ import { SmartPlayerComponent, Slide, validateSlide, ValidationIssue } from 'sma
     .status-warn { color: #f59e0b; display: flex; align-items: center; gap: 4px; }
     .status-chars { color: #475569; margin-left: auto; }
 
+    .scenario-notice {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid rgba(59,130,246,0.25);
+      border-top: none;
+      background: rgba(59,130,246,0.06);
+      font-size: 0.75rem;
+      color: #3b82f6;
+      line-height: 1.4;
+
+      code {
+        font-family: ui-monospace, monospace;
+        font-size: 0.72rem;
+        background: rgba(59,130,246,0.12);
+        padding: 1px 4px;
+        border-radius: 3px;
+      }
+    }
+
     .issues-panel {
       border: 1px solid var(--border, #e2e8f0); border-top: none;
       background: var(--card, #fff); max-height: 340px; overflow-y: auto;
@@ -449,6 +477,7 @@ export class UploadComponent {
   dragging = signal(false);
   jsonText = signal('');
   parseError = signal<string | null>(null);
+  scenarioUnwrapped = signal(false);
 
   liveIssues = signal<ValidationIssue[]>([]);
   liveErrorCount = computed(() => this.liveIssues().filter(i => i.severity === 'error').length);
@@ -524,9 +553,11 @@ export class UploadComponent {
     if (!text || this.parseError()) return;
     try {
       const raw = JSON.parse(text);
-      const result = validateSlide(raw);
+      const { data, wasScenario } = this.unwrapIfScenario(raw);
+      this.scenarioUnwrapped.set(wasScenario);
+      const result = validateSlide(data);
       this.issues.set(result.issues.filter(i => i.severity !== 'error'));
-      this.slide.set(raw as Slide);
+      this.slide.set(data as Slide);
     } catch (e: unknown) {
       this.parseError.set(e instanceof Error ? e.message : 'JSON invalide');
     }
@@ -538,6 +569,7 @@ export class UploadComponent {
     this.parseError.set(null);
     this.jsonText.set('');
     this.liveIssues.set([]);
+    this.scenarioUnwrapped.set(false);
   }
 
   severityLabel(s: ValidationIssue['severity']): string {
@@ -553,6 +585,7 @@ export class UploadComponent {
     if (!text.trim()) {
       this.parseError.set(null);
       this.liveIssues.set([]);
+      this.scenarioUnwrapped.set(false);
       return;
     }
     let raw: unknown;
@@ -562,10 +595,27 @@ export class UploadComponent {
     } catch (e: unknown) {
       this.parseError.set(e instanceof Error ? e.message : 'JSON invalide');
       this.liveIssues.set([]);
+      this.scenarioUnwrapped.set(false);
       return;
     }
-    const result = validateSlide(raw);
+    const { data, wasScenario } = this.unwrapIfScenario(raw);
+    this.scenarioUnwrapped.set(wasScenario);
+    const result = validateSlide(data);
     this.liveIssues.set(result.issues);
+  }
+
+  private unwrapIfScenario(raw: unknown): { data: unknown; wasScenario: boolean } {
+    if (typeof raw === 'object' && raw !== null && !Array.isArray(raw)) {
+      const obj = raw as Record<string, unknown>;
+      const slide = obj['slide'];
+      if (typeof slide === 'object' && slide !== null && !Array.isArray(slide)) {
+        const s = slide as Record<string, unknown>;
+        if (s['id'] && s['title'] && Array.isArray(s['nodes'])) {
+          return { data: slide, wasScenario: true };
+        }
+      }
+    }
+    return { data: raw, wasScenario: false };
   }
 
   private readFile(file: File): void {
