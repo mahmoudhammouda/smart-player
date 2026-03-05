@@ -58,6 +58,21 @@ import { MOCK_SCENARIOS } from './data/mock-scenarios';
             <span class="sidebar-group-label">Tools</span>
             <a
               class="sidebar-item"
+              routerLink="/schema"
+              routerLinkActive="sidebar-item-active"
+              (click)="closeSidebarMobile()"
+              data-testid="link-schema"
+            >
+              <span class="sidebar-item-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+              </span>
+              <div class="sidebar-item-info">
+                <span class="sidebar-item-name">Node Dictionary</span>
+                <span class="sidebar-item-desc">Référence LLM — 30 types</span>
+              </div>
+            </a>
+            <a
+              class="sidebar-item"
               routerLink="/upload"
               routerLinkActive="sidebar-item-active"
               (click)="closeSidebarMobile()"

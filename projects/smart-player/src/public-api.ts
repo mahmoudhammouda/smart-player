@@ -31,3 +31,4 @@ export * from './lib/components/columns-layout-node/columns-layout-node.componen
 export * from './lib/components/data-board-node/data-board-node.component';
 export * from './lib/components/chemical-structure-node/chemical-structure-node.component';
 export * from './lib/components/file-pdf-node/file-pdf-node.component';
+export { SP_NODE_DICTIONARY, getNodeDefinition, buildLlmSystemPrompt } from './lib/llm-schema/index';

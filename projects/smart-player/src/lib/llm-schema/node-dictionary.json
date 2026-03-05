@@ -1,0 +1,1100 @@
+{
+  "$schema": "SmartPlayer Node Dictionary v1.0",
+  "description": "Complete reference dictionary for all SmartPlayer node types. Provide this dictionary to any LLM to enable it to generate valid SmartPlayer slide JSON. Every slide is a JSON object containing an array of nodes. Each node must conform to the SlideNode schema defined below.",
+  "library_version": "1.0.0",
+  "total_node_types": 30,
+
+  "slide_structure": {
+    "description": "Top-level Slide object. This is what you pass to the [slide] input of <sp-smart-player>.",
+    "required_fields": ["id", "title", "nodes"],
+    "schema": {
+      "id": {
+        "type": "string",
+        "description": "Unique identifier for the slide. Use kebab-case.",
+        "example": "intro-calculus-lesson-1"
+      },
+      "title": {
+        "type": "string",
+        "description": "Human-readable title of the slide (shown in the player header).",
+        "example": "Introduction to Calculus"
+      },
+      "description": {
+        "type": "string",
+        "optional": true,
+        "description": "Short subtitle or abstract for the slide.",
+        "example": "Core concepts of differential and integral calculus"
+      },
+      "tags": {
+        "type": "string[]",
+        "optional": true,
+        "description": "Keyword tags for search and categorisation.",
+        "example": ["math", "calculus", "derivatives"]
+      },
+      "nodes": {
+        "type": "SlideNode[]",
+        "description": "Ordered array of content nodes. Rendered top-to-bottom in reading order.",
+        "min_items": 1
+      }
+    },
+    "example": {
+      "id": "slide-example-001",
+      "title": "My Slide Title",
+      "description": "Optional subtitle",
+      "tags": ["science", "intro"],
+      "nodes": []
+    }
+  },
+
+  "node_base_schema": {
+    "description": "Every node, regardless of type, shares these base fields.",
+    "required_fields": ["id", "type", "content"],
+    "fields": {
+      "id": {
+        "type": "string",
+        "description": "Unique node identifier within the slide. Must be unique across all nodes in the slide. Use short identifiers like 'n1', 'n2', or descriptive ones like 'intro-text'.",
+        "example": "n1"
+      },
+      "type": {
+        "type": "string",
+        "description": "Node type string. Must exactly match one of the 30 built-in types listed in this dictionary, or a custom registered type.",
+        "valid_values": [
+          "text", "heading", "list", "divider", "footnote",
+          "callout", "quote", "key-concept", "step-by-step",
+          "math", "code", "diagram", "interactive-sandbox",
+          "table", "image-caption", "video-embed", "audio-player", "gallery",
+          "fill-blanks", "flash-card", "toc", "progress",
+          "toggle-list", "columns-layout", "checklist", "data-board",
+          "chemical-structure", "web-bookmark", "file-pdf", "mention"
+        ]
+      },
+      "content": {
+        "type": "string | object | array | null",
+        "description": "The main payload of the node. Its type and structure depend entirely on the node 'type'. See each node definition below for the exact expected value.",
+        "note": "For simple text-based nodes, this is a plain string. For structured nodes (table, flash-card, etc.) this is a JSON object or array."
+      },
+      "language": {
+        "type": "string",
+        "optional": true,
+        "description": "Used only by the 'code' node. Specifies the programming language for syntax highlighting.",
+        "example": "python"
+      },
+      "label": {
+        "type": "string",
+        "optional": true,
+        "description": "Human-readable label shown in the refine/edit toolbar. Helps users identify the block. Optional but recommended.",
+        "example": "Introduction paragraph"
+      },
+      "meta": {
+        "type": "object",
+        "optional": true,
+        "description": "Node-specific configuration options. Keys and valid values are defined per node type below. All meta fields are optional unless stated otherwise.",
+        "example": { "variant": "warning", "title": "Important" }
+      }
+    }
+  },
+
+  "categories": {
+    "typography_and_layout": {
+      "label": "Typography & Layout",
+      "description": "Core document structure and text formatting nodes.",
+      "types": ["text", "heading", "list", "divider", "footnote", "toggle-list", "columns-layout"]
+    },
+    "callouts_and_highlights": {
+      "label": "Callouts & Highlights",
+      "description": "Nodes that draw attention to specific content.",
+      "types": ["callout", "quote", "key-concept", "step-by-step"]
+    },
+    "scientific_and_technical": {
+      "label": "Scientific & Technical",
+      "description": "Nodes for technical content: math, code, diagrams, chemistry.",
+      "types": ["math", "code", "diagram", "interactive-sandbox", "table", "chemical-structure", "data-board"]
+    },
+    "media": {
+      "label": "Media & Embeds",
+      "description": "Nodes that embed external media.",
+      "types": ["image-caption", "video-embed", "audio-player", "gallery", "web-bookmark", "file-pdf"]
+    },
+    "interactive_pedagogical": {
+      "label": "Interactive & Pedagogical",
+      "description": "Nodes that engage learners through interaction.",
+      "types": ["fill-blanks", "flash-card", "checklist", "progress"]
+    },
+    "navigation_and_reference": {
+      "label": "Navigation & Reference",
+      "description": "Nodes for navigation, cross-referencing, and metadata.",
+      "types": ["toc", "mention"]
+    }
+  },
+
+  "node_types": {
+
+    "text": {
+      "description": "Rich paragraph text. Supports a subset of Markdown-like inline formatting: **bold**, *italic*, `inline code`, and numbered/bulleted lists separated by double newlines.",
+      "category": "typography_and_layout",
+      "content": {
+        "type": "string",
+        "description": "The text content. Paragraphs separated by double newlines (\\n\\n). Supports **bold**, *italic*, and `code` inline. Lines starting with '1. ', '2. ' are rendered as ordered lists. Lines starting with '- ' or '* ' are rendered as bullet lists.",
+        "example": "Calculus is the study of **continuous change**.\n\nIt has two branches:\n1. Differential calculus\n2. Integral calculus"
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n1",
+        "type": "text",
+        "label": "Introduction",
+        "content": "Calculus is the mathematical study of **continuous change**. It has two major branches:\n\n1. **Differential calculus** — rates of change and slopes\n2. **Integral calculus** — accumulation of quantities"
+      }
+    },
+
+    "heading": {
+      "description": "A section heading (h1, h2, or h3). Use to structure the document hierarchy. Rendered as a large typographic title.",
+      "category": "typography_and_layout",
+      "content": {
+        "type": "string",
+        "description": "The heading text. Keep concise — this is a title, not a paragraph.",
+        "example": "Introduction to Thermodynamics"
+      },
+      "meta": {
+        "level": {
+          "type": "number",
+          "optional": true,
+          "default": 2,
+          "valid_values": [1, 2, 3],
+          "description": "Heading level. 1 = largest (chapter), 2 = section (default), 3 = subsection."
+        }
+      },
+      "full_example": {
+        "id": "n2",
+        "type": "heading",
+        "content": "Core Concepts",
+        "meta": { "level": 2 }
+      }
+    },
+
+    "list": {
+      "description": "A bulleted or numbered list, supporting nested sub-items.",
+      "category": "typography_and_layout",
+      "content": {
+        "type": "array",
+        "description": "Array of list items. Each item is either a plain string or an object with 'text' and optional 'children' for nesting.",
+        "item_schema": {
+          "oneOf": [
+            { "type": "string", "description": "Simple list item text." },
+            {
+              "type": "object",
+              "fields": {
+                "text": { "type": "string", "description": "Item text." },
+                "children": { "type": "ListItem[]", "optional": true, "description": "Nested sub-items (same structure, recursive)." }
+              }
+            }
+          ]
+        },
+        "example": ["First item", "Second item", { "text": "Third with children", "children": ["Sub-item A", "Sub-item B"] }]
+      },
+      "meta": {
+        "ordered": {
+          "type": "boolean",
+          "optional": true,
+          "default": false,
+          "description": "If true, renders as a numbered list (1, 2, 3…). If false (default), renders as bullet points."
+        }
+      },
+      "full_example": {
+        "id": "n3",
+        "type": "list",
+        "label": "Key Properties",
+        "content": ["Commutative", "Associative", { "text": "Distributive", "children": ["Over addition", "Over subtraction"] }],
+        "meta": { "ordered": false }
+      }
+    },
+
+    "divider": {
+      "description": "A horizontal visual separator between sections. Has no content.",
+      "category": "typography_and_layout",
+      "content": {
+        "type": "null",
+        "description": "Set to null. Dividers carry no content.",
+        "example": null
+      },
+      "meta": {
+        "style": {
+          "type": "string",
+          "optional": true,
+          "default": "line",
+          "valid_values": ["line", "dots", "stars"],
+          "description": "Visual style of the divider."
+        }
+      },
+      "full_example": {
+        "id": "n4",
+        "type": "divider",
+        "content": null,
+        "meta": { "style": "dots" }
+      }
+    },
+
+    "footnote": {
+      "description": "A small-text annotation or footnote, displayed in reduced font size at the current position in the document.",
+      "category": "typography_and_layout",
+      "content": {
+        "type": "string",
+        "description": "The footnote text. Usually short (1–2 sentences).",
+        "example": "¹ Source: Newton, I. (1687). Philosophiæ Naturalis Principia Mathematica."
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n5",
+        "type": "footnote",
+        "content": "¹ This approximation holds for small angles (θ < 15°)."
+      }
+    },
+
+    "callout": {
+      "description": "A highlighted box with an icon and optional title used to draw attention to warnings, tips, notes, or errors.",
+      "category": "callouts_and_highlights",
+      "content": {
+        "type": "string",
+        "description": "The callout body text.",
+        "example": "Always double-check your units before computing a final answer."
+      },
+      "meta": {
+        "variant": {
+          "type": "string",
+          "optional": true,
+          "default": "info",
+          "valid_values": ["info", "warning", "error", "success", "tip"],
+          "description": "Controls the color scheme and icon. 'info' = blue ℹ, 'warning' = amber ⚠, 'error' = red ✕, 'success' = green ✓, 'tip' = purple 💡."
+        },
+        "title": {
+          "type": "string",
+          "optional": true,
+          "description": "Bold title displayed above the body text.",
+          "example": "Watch Out!"
+        }
+      },
+      "full_example": {
+        "id": "n6",
+        "type": "callout",
+        "label": "Safety note",
+        "content": "Never mix bleach and ammonia. The reaction produces toxic chloramine gas.",
+        "meta": { "variant": "warning", "title": "Safety Warning" }
+      }
+    },
+
+    "quote": {
+      "description": "A styled block quote with optional attribution (author and source).",
+      "category": "callouts_and_highlights",
+      "content": {
+        "type": "string",
+        "description": "The quoted text.",
+        "example": "An expert is a man who has made all the mistakes which can be made in a very narrow field."
+      },
+      "meta": {
+        "author": {
+          "type": "string",
+          "optional": true,
+          "description": "Name of the person being quoted.",
+          "example": "Niels Bohr"
+        },
+        "source": {
+          "type": "string",
+          "optional": true,
+          "description": "Title of the work or context from which the quote is taken.",
+          "example": "Interview, 1964"
+        }
+      },
+      "full_example": {
+        "id": "n7",
+        "type": "quote",
+        "content": "Imagination is more important than knowledge.",
+        "meta": { "author": "Albert Einstein", "source": "The Saturday Evening Post, 1929" }
+      }
+    },
+
+    "key-concept": {
+      "description": "A definition block that highlights a technical term and its explanation. Displayed as a bordered card with the term in a distinct style.",
+      "category": "callouts_and_highlights",
+      "content": {
+        "type": "string",
+        "description": "The full definition or explanation of the concept.",
+        "example": "A derivative measures the instantaneous rate of change of a function with respect to one of its variables."
+      },
+      "meta": {
+        "term": {
+          "type": "string",
+          "optional": false,
+          "description": "The term being defined. Displayed prominently above the definition.",
+          "example": "Derivative"
+        }
+      },
+      "full_example": {
+        "id": "n8",
+        "type": "key-concept",
+        "label": "Derivative definition",
+        "content": "The derivative of a function f at a point x is the limit of the difference quotient as h approaches 0.",
+        "meta": { "term": "Derivative" }
+      }
+    },
+
+    "step-by-step": {
+      "description": "A numbered sequential list of steps, rendered as a visual timeline/stepper. Ideal for algorithms, procedures, or multi-stage explanations.",
+      "category": "callouts_and_highlights",
+      "content": {
+        "type": "array",
+        "description": "Array of step objects, each with a title and description.",
+        "item_schema": {
+          "type": "object",
+          "fields": {
+            "title": { "type": "string", "description": "Short step title (shown in bold)." },
+            "description": { "type": "string", "description": "Detailed explanation of the step." }
+          }
+        },
+        "example": [
+          { "title": "Identify the function", "description": "Write down f(x) explicitly." },
+          { "title": "Apply the power rule", "description": "For f(x) = xⁿ, the derivative is f'(x) = n·xⁿ⁻¹." }
+        ]
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n9",
+        "type": "step-by-step",
+        "label": "Integration procedure",
+        "content": [
+          { "title": "Identify the integrand", "description": "Determine f(x) from the integral ∫f(x)dx." },
+          { "title": "Find the antiderivative", "description": "Apply integration rules to find F(x) such that F'(x) = f(x)." },
+          { "title": "Add the constant", "description": "Append the constant of integration C: F(x) + C." }
+        ]
+      }
+    },
+
+    "math": {
+      "description": "A displayed mathematical formula rendered using KaTeX (LaTeX syntax). Renders as a centred block equation.",
+      "category": "scientific_and_technical",
+      "content": {
+        "type": "string",
+        "description": "A valid LaTeX math expression. Do NOT wrap in $…$ or $$…$$ delimiters — provide the raw LaTeX only.",
+        "example": "E = mc^2",
+        "more_examples": [
+          "\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}",
+          "\\sum_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6}",
+          "f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}"
+        ]
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n10",
+        "type": "math",
+        "label": "Euler's Identity",
+        "content": "e^{i\\pi} + 1 = 0"
+      }
+    },
+
+    "code": {
+      "description": "A syntax-highlighted code block with a copy button. Supports all major programming languages via highlight.js.",
+      "category": "scientific_and_technical",
+      "content": {
+        "type": "string",
+        "description": "The raw source code as a string. Preserve indentation using \\n and spaces/tabs.",
+        "example": "def factorial(n):\n    if n == 0:\n        return 1\n    return n * factorial(n - 1)"
+      },
+      "language": {
+        "type": "string",
+        "optional": true,
+        "default": "plaintext",
+        "description": "Programming language for syntax highlighting. Use lowercase language names.",
+        "valid_values": ["python", "javascript", "typescript", "java", "c", "cpp", "csharp", "go", "rust", "swift", "kotlin", "ruby", "php", "bash", "shell", "sql", "html", "css", "json", "yaml", "xml", "markdown", "plaintext"]
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n11",
+        "type": "code",
+        "label": "Fibonacci in Python",
+        "language": "python",
+        "content": "def fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\n\nprint(fibonacci(10))  # 55"
+      }
+    },
+
+    "diagram": {
+      "description": "A diagram rendered from Mermaid DSL. Supports flowcharts, sequence diagrams, class diagrams, Gantt charts, pie charts, ER diagrams, and more.",
+      "category": "scientific_and_technical",
+      "content": {
+        "type": "string",
+        "description": "A valid Mermaid diagram definition. Include the diagram type keyword on the first line.",
+        "example": "graph TD\n  A[Start] --> B{Decision}\n  B -->|Yes| C[Action]\n  B -->|No| D[End]",
+        "mermaid_types": ["graph LR", "graph TD", "sequenceDiagram", "classDiagram", "gantt", "pie", "erDiagram", "stateDiagram-v2", "journey", "mindmap"]
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n12",
+        "type": "diagram",
+        "label": "Photosynthesis cycle",
+        "content": "graph TD\n  Sun -->|Light energy| Chlorophyll\n  CO2 -->|Carbon dioxide| Chlorophyll\n  H2O -->|Water| Chlorophyll\n  Chlorophyll -->|Glucose| Plant\n  Chlorophyll -->|Oxygen| Air"
+      }
+    },
+
+    "interactive-sandbox": {
+      "description": "A live HTML/CSS/JavaScript sandbox rendered in a sandboxed iframe. Useful for interactive demonstrations and mini-experiments.",
+      "category": "scientific_and_technical",
+      "content": {
+        "type": "string",
+        "description": "Raw HTML fragment (can include inline <style> and <script> tags). This is injected into a full HTML page inside a sandboxed iframe. Do not include <html>, <head>, or <body> tags.",
+        "example": "<style>canvas{border:1px solid #ccc;}</style>\n<canvas id='c' width='200' height='200'></canvas>\n<script>\nconst ctx = document.getElementById('c').getContext('2d');\nctx.fillStyle = 'steelblue';\nctx.fillRect(50, 50, 100, 100);\n</script>"
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n13",
+        "type": "interactive-sandbox",
+        "label": "Interactive sine wave",
+        "content": "<style>body{font-family:sans-serif;padding:10px;}canvas{border:1px solid #ddd;border-radius:4px;}</style>\n<canvas id='c' width='400' height='150'></canvas>\n<script>\nconst ctx = document.getElementById('c').getContext('2d');\nctx.beginPath();\nfor(let x=0;x<400;x++){ctx.lineTo(x, 75 + Math.sin(x/20)*50);}\nctx.strokeStyle='#3b82f6';\nctx.lineWidth=2;\nctx.stroke();\n</script>"
+      }
+    },
+
+    "table": {
+      "description": "A formatted data table with headers and rows. Optionally includes a caption below.",
+      "category": "scientific_and_technical",
+      "content": {
+        "type": "object",
+        "description": "Object with 'headers' (column names) and 'rows' (data rows). All values should be strings.",
+        "fields": {
+          "headers": {
+            "type": "string[]",
+            "description": "Column header labels."
+          },
+          "rows": {
+            "type": "string[][]",
+            "description": "2D array of cell values. Each inner array is one row, with values corresponding to columns in 'headers'."
+          }
+        },
+        "example": {
+          "headers": ["Element", "Symbol", "Atomic Number"],
+          "rows": [["Hydrogen", "H", "1"], ["Carbon", "C", "6"], ["Oxygen", "O", "8"]]
+        }
+      },
+      "meta": {
+        "caption": {
+          "type": "string",
+          "optional": true,
+          "description": "Table caption displayed below the table in italic.",
+          "example": "Table 1: Common elements and their properties"
+        }
+      },
+      "full_example": {
+        "id": "n14",
+        "type": "table",
+        "label": "Periodic table excerpt",
+        "content": {
+          "headers": ["Element", "Symbol", "Atomic Number", "Atomic Mass"],
+          "rows": [
+            ["Hydrogen", "H", "1", "1.008"],
+            ["Helium", "He", "2", "4.003"],
+            ["Lithium", "Li", "3", "6.941"],
+            ["Carbon", "C", "6", "12.011"]
+          ]
+        },
+        "meta": { "caption": "Selected elements from the periodic table" }
+      }
+    },
+
+    "image-caption": {
+      "description": "An image with an optional caption displayed below. The image is responsive (max-width: 100%).",
+      "category": "media",
+      "content": {
+        "type": "string",
+        "description": "Absolute URL to the image. Use HTTPS URLs. Common formats: jpg, png, webp, svg, gif.",
+        "example": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Mandelbrot_sequence_new.gif/320px-Mandelbrot_sequence_new.gif"
+      },
+      "meta": {
+        "alt": {
+          "type": "string",
+          "optional": true,
+          "description": "Accessibility alt text for the image. Always provide for educational content.",
+          "example": "Diagram showing the structure of a water molecule H2O"
+        },
+        "caption": {
+          "type": "string",
+          "optional": true,
+          "description": "Caption text shown below the image in small italic.",
+          "example": "Figure 1: The Mandelbrot set, a fractal structure."
+        }
+      },
+      "full_example": {
+        "id": "n15",
+        "type": "image-caption",
+        "label": "DNA double helix",
+        "content": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/DNA_Structure%2BKey%2BLabelled.pn_NoBB.png/220px-DNA_Structure%2BKey%2BLabelled.pn_NoBB.png",
+        "meta": {
+          "alt": "Diagram of the DNA double helix structure with labeled base pairs",
+          "caption": "Figure 1: The double helix structure of DNA, as described by Watson and Crick (1953)."
+        }
+      }
+    },
+
+    "video-embed": {
+      "description": "An embedded video player. Supports YouTube URLs (auto-converted to embed) and direct MP4/video file URLs.",
+      "category": "media",
+      "content": {
+        "type": "string",
+        "description": "For YouTube: the full watch URL (https://www.youtube.com/watch?v=VIDEO_ID), YouTube short URL (https://youtu.be/VIDEO_ID), or YouTube Shorts URL. For direct video: a direct URL to an mp4, webm, or ogg file.",
+        "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      },
+      "meta": {
+        "provider": {
+          "type": "string",
+          "optional": true,
+          "default": "youtube",
+          "valid_values": ["youtube", "mp4"],
+          "description": "Set to 'youtube' for YouTube links (default), 'mp4' for direct video file URLs."
+        }
+      },
+      "full_example": {
+        "id": "n16",
+        "type": "video-embed",
+        "label": "Lecture video",
+        "content": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+        "meta": { "provider": "youtube" }
+      }
+    },
+
+    "audio-player": {
+      "description": "An HTML5 audio player with native controls and an optional title.",
+      "category": "media",
+      "content": {
+        "type": "string",
+        "description": "Direct URL to an audio file. Supports mp3, ogg, wav, aac, m4a formats.",
+        "example": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      },
+      "meta": {
+        "title": {
+          "type": "string",
+          "optional": true,
+          "description": "Title label shown above the audio player.",
+          "example": "Lecture 3 — Quantum Wave Functions"
+        }
+      },
+      "full_example": {
+        "id": "n17",
+        "type": "audio-player",
+        "label": "Podcast segment",
+        "content": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+        "meta": { "title": "Episode 12 — The Big Bang Theory" }
+      }
+    },
+
+    "gallery": {
+      "description": "A horizontal scrollable image gallery with optional per-image captions.",
+      "category": "media",
+      "content": {
+        "type": "array",
+        "description": "Array of image objects. Each object has a required 'url' and optional 'caption'.",
+        "item_schema": {
+          "type": "object",
+          "fields": {
+            "url": { "type": "string", "description": "Absolute URL to the image." },
+            "caption": { "type": "string", "optional": true, "description": "Caption displayed below the image thumbnail." }
+          }
+        },
+        "example": [
+          { "url": "https://picsum.photos/seed/a/400/300", "caption": "Phase 1" },
+          { "url": "https://picsum.photos/seed/b/400/300", "caption": "Phase 2" }
+        ]
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n18",
+        "type": "gallery",
+        "label": "Cell division stages",
+        "content": [
+          { "url": "https://picsum.photos/seed/cell1/400/300", "caption": "Prophase: chromosomes condense" },
+          { "url": "https://picsum.photos/seed/cell2/400/300", "caption": "Metaphase: alignment at the equator" },
+          { "url": "https://picsum.photos/seed/cell3/400/300", "caption": "Anaphase: chromatids separate" },
+          { "url": "https://picsum.photos/seed/cell4/400/300", "caption": "Telophase: nuclear envelope reforms" }
+        ]
+      }
+    },
+
+    "fill-blanks": {
+      "description": "An interactive fill-in-the-blank exercise. The user types answers into input fields. Clicking 'Check' validates answers. Answers are embedded in the content string using triple-underscore syntax.",
+      "category": "interactive_pedagogical",
+      "content": {
+        "type": "string",
+        "description": "Text with blanks embedded using the syntax ___answer___ (three underscores before and after the correct answer). The answer text is hidden from the user but used for validation. There can be multiple blanks in one node.",
+        "syntax_rule": "Use ___ANSWER___ to mark a blank. The word(s) between the triple underscores are the expected correct answers (case-insensitive comparison).",
+        "example": "The speed of light is approximately ___299,792,458___ metres per second. It was first measured by ___Ole Rømer___ in 1676.",
+        "more_examples": [
+          "Water is composed of ___two___ hydrogen atoms and ___one___ oxygen atom.",
+          "The derivative of sin(x) is ___cos(x)___.",
+          "Newton's second law states that force equals ___mass___ times ___acceleration___."
+        ]
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n19",
+        "type": "fill-blanks",
+        "label": "Chemistry exercise",
+        "content": "The chemical formula for water is ___H₂O___. It is composed of ___two___ hydrogen atoms and ___one___ oxygen atom. Water has a boiling point of ___100___ degrees Celsius at standard pressure."
+      }
+    },
+
+    "flash-card": {
+      "description": "An interactive flashcard deck. Each card has a front (question/term) and a back (answer/definition). Clicking a card flips it with a 3D animation. Navigation arrows cycle through the deck.",
+      "category": "interactive_pedagogical",
+      "content": {
+        "type": "array",
+        "description": "Array of flashcard objects, each with 'front' and 'back' text.",
+        "item_schema": {
+          "type": "object",
+          "fields": {
+            "front": { "type": "string", "description": "Question, term, or prompt shown on the card front." },
+            "back": { "type": "string", "description": "Answer, definition, or explanation shown when the card is flipped." }
+          }
+        },
+        "example": [
+          { "front": "What is a derivative?", "back": "The instantaneous rate of change of a function at a point." },
+          { "front": "∫ sin(x) dx = ?", "back": "-cos(x) + C" }
+        ]
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n20",
+        "type": "flash-card",
+        "label": "Calculus vocabulary",
+        "content": [
+          { "front": "Derivative", "back": "Measures the instantaneous rate of change: f'(x) = lim(h→0) [f(x+h)-f(x)]/h" },
+          { "front": "Integral", "back": "Measures the accumulated area under a curve: ∫f(x)dx" },
+          { "front": "Limit", "back": "The value a function approaches as the input approaches a given point." },
+          { "front": "Continuity", "back": "A function is continuous if lim(x→a) f(x) = f(a) for all a in its domain." }
+        ]
+      }
+    },
+
+    "toc": {
+      "description": "A Table of Contents block listing section titles with their heading levels. Rendered as a structured navigation list.",
+      "category": "navigation_and_reference",
+      "content": {
+        "type": "array",
+        "description": "Array of TOC entry objects, each with a title and heading level.",
+        "item_schema": {
+          "type": "object",
+          "fields": {
+            "title": { "type": "string", "description": "Section title as it appears in the document." },
+            "level": { "type": "number", "description": "Heading level (1, 2, or 3). Level 1 has no indent, level 2 is indented 20px, level 3 is indented 40px." }
+          }
+        },
+        "example": [
+          { "title": "Introduction", "level": 1 },
+          { "title": "Core Concepts", "level": 2 },
+          { "title": "The Derivative", "level": 3 }
+        ]
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n21",
+        "type": "toc",
+        "label": "Table of Contents",
+        "content": [
+          { "title": "1. Introduction to Calculus", "level": 1 },
+          { "title": "1.1 What is a Limit?", "level": 2 },
+          { "title": "1.2 The Derivative", "level": 2 },
+          { "title": "1.2.1 Chain Rule", "level": 3 },
+          { "title": "1.2.2 Product Rule", "level": 3 },
+          { "title": "2. Integration", "level": 1 },
+          { "title": "2.1 Riemann Sums", "level": 2 }
+        ]
+      }
+    },
+
+    "progress": {
+      "description": "An interactive progress checkpoint. Displays a task label with a clickable completion toggle. Users can check it off to mark it done.",
+      "category": "interactive_pedagogical",
+      "content": {
+        "type": "string",
+        "description": "The label text describing the learning goal or task to be completed.",
+        "example": "Complete the exercises in Section 3"
+      },
+      "meta": {
+        "completed": {
+          "type": "boolean",
+          "optional": true,
+          "default": false,
+          "description": "Initial completion state. Set to true if the task should appear pre-completed."
+        }
+      },
+      "full_example": {
+        "id": "n22",
+        "type": "progress",
+        "label": "Milestone checkpoint",
+        "content": "Read and understand the chain rule before proceeding to the next section",
+        "meta": { "completed": false }
+      }
+    },
+
+    "toggle-list": {
+      "description": "A collapsible accordion list. Each item has a clickable header that expands/collapses its body text. Multiple items can be open simultaneously.",
+      "category": "typography_and_layout",
+      "content": {
+        "type": "array",
+        "description": "Array of toggle items, each with a 'title' (the clickable header) and 'body' (the revealed content).",
+        "item_schema": {
+          "type": "object",
+          "fields": {
+            "title": { "type": "string", "description": "Header text shown at all times. Clicking opens/closes the item." },
+            "body": { "type": "string", "description": "Content revealed when the item is expanded." }
+          }
+        },
+        "example": [
+          { "title": "What is a derivative?", "body": "A derivative measures the rate at which a function changes at any given point." },
+          { "title": "What is an integral?", "body": "An integral calculates the area under a curve between two bounds." }
+        ]
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n23",
+        "type": "toggle-list",
+        "label": "FAQ section",
+        "content": [
+          { "title": "When should I use the chain rule?", "body": "Use the chain rule when differentiating a composite function f(g(x)). It states: [f(g(x))]' = f'(g(x)) · g'(x)." },
+          { "title": "What is L'Hôpital's rule?", "body": "L'Hôpital's rule states that for indeterminate forms (0/0 or ∞/∞), lim f(x)/g(x) = lim f'(x)/g'(x)." },
+          { "title": "What is the fundamental theorem of calculus?", "body": "It links differentiation and integration: the definite integral of f from a to b equals F(b) - F(a) where F is any antiderivative of f." }
+        ]
+      }
+    },
+
+    "columns-layout": {
+      "description": "Renders child nodes in side-by-side columns (2 or 3). Each column is an independent sub-sequence of nodes rendered with the same node types available to the main slide. Collapses to a single column on small screens.",
+      "category": "typography_and_layout",
+      "content": {
+        "type": "array of arrays",
+        "description": "An array where each element is itself an array of SlideNode objects representing one column. The outer array length determines the number of columns (2 or 3). Each inner array can contain any valid SlideNode objects.",
+        "important": "This is the only node type where 'content' is a nested array of full SlideNode objects. The child nodes inside columns support all 30 node types recursively.",
+        "example": [
+          [
+            { "id": "col1-n1", "type": "heading", "content": "Left Column", "meta": { "level": 3 } },
+            { "id": "col1-n2", "type": "text", "content": "Content for the left column." }
+          ],
+          [
+            { "id": "col2-n1", "type": "heading", "content": "Right Column", "meta": { "level": 3 } },
+            { "id": "col2-n2", "type": "math", "content": "E = mc^2" }
+          ]
+        ]
+      },
+      "meta": {
+        "columns": {
+          "type": "number",
+          "optional": true,
+          "default": "derived from content array length",
+          "valid_values": [2, 3],
+          "description": "Explicitly set the number of columns. If omitted, derived from the length of the content array."
+        }
+      },
+      "full_example": {
+        "id": "n24",
+        "type": "columns-layout",
+        "label": "Two-column comparison",
+        "meta": { "columns": 2 },
+        "content": [
+          [
+            { "id": "c1h", "type": "heading", "content": "Differentiation", "meta": { "level": 3 } },
+            { "id": "c1t", "type": "text", "content": "Differentiation finds the rate of change (slope) of a function." },
+            { "id": "c1m", "type": "math", "content": "\\frac{d}{dx}[x^n] = nx^{n-1}" }
+          ],
+          [
+            { "id": "c2h", "type": "heading", "content": "Integration", "meta": { "level": 3 } },
+            { "id": "c2t", "type": "text", "content": "Integration finds the accumulated area under a function curve." },
+            { "id": "c2m", "type": "math", "content": "\\int x^n dx = \\frac{x^{n+1}}{n+1} + C" }
+          ]
+        ]
+      }
+    },
+
+    "checklist": {
+      "description": "An interactive task checklist. Users can click items to toggle their checked state. Displays a completion counter (X / Y completed) below the list.",
+      "category": "interactive_pedagogical",
+      "content": {
+        "type": "array",
+        "description": "Array of checklist item objects with 'text' and 'checked' state.",
+        "item_schema": {
+          "type": "object",
+          "fields": {
+            "text": { "type": "string", "description": "Task description text." },
+            "checked": { "type": "boolean", "description": "Initial checked state. Use true for pre-completed tasks, false for pending." }
+          }
+        },
+        "example": [
+          { "text": "Read Section 1", "checked": true },
+          { "text": "Complete exercises 1–5", "checked": false },
+          { "text": "Watch the lecture video", "checked": false }
+        ]
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n25",
+        "type": "checklist",
+        "label": "Module 3 tasks",
+        "content": [
+          { "text": "Read the introduction to integration", "checked": true },
+          { "text": "Study the power rule for integration", "checked": true },
+          { "text": "Practice 10 integration problems", "checked": false },
+          { "text": "Complete the self-assessment quiz", "checked": false },
+          { "text": "Review the worked examples", "checked": false }
+        ]
+      }
+    },
+
+    "data-board": {
+      "description": "A Kanban-style data board with multiple columns of cards. Horizontally scrollable. Useful for comparing options, tracking project phases, or presenting categorised information.",
+      "category": "scientific_and_technical",
+      "content": {
+        "type": "object",
+        "description": "Object with a 'columns' array. Each column has a title, optional color dot, and an array of cards.",
+        "fields": {
+          "columns": {
+            "type": "array",
+            "description": "Array of column objects.",
+            "item_schema": {
+              "type": "object",
+              "fields": {
+                "title": { "type": "string", "description": "Column header label." },
+                "color": { "type": "string", "optional": true, "description": "CSS hex or named color for the column header dot. E.g. '#ef4444', '#22c55e'." },
+                "cards": {
+                  "type": "array",
+                  "description": "Array of card objects within this column.",
+                  "item_schema": {
+                    "type": "object",
+                    "fields": {
+                      "title": { "type": "string", "description": "Bold card title." },
+                      "description": { "type": "string", "optional": true, "description": "Short card description in muted text." },
+                      "tags": { "type": "string[]", "optional": true, "description": "Array of tag label strings displayed as chips." },
+                      "priority": { "type": "string", "optional": true, "valid_values": ["low", "medium", "high"], "description": "Priority badge color: low = green, medium = amber, high = red." }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n26",
+        "type": "data-board",
+        "label": "Research pipeline",
+        "content": {
+          "columns": [
+            {
+              "title": "Backlog",
+              "color": "#94a3b8",
+              "cards": [
+                { "title": "Literature review", "description": "Survey 50 papers on quantum entanglement", "tags": ["research", "reading"], "priority": "low" },
+                { "title": "Dataset collection", "description": "Gather experimental results from 2020–2024", "tags": ["data"], "priority": "medium" }
+              ]
+            },
+            {
+              "title": "In Progress",
+              "color": "#3b82f6",
+              "cards": [
+                { "title": "Statistical analysis", "description": "Run regression models on collected data", "tags": ["stats", "python"], "priority": "high" }
+              ]
+            },
+            {
+              "title": "Done",
+              "color": "#22c55e",
+              "cards": [
+                { "title": "Hypothesis formulation", "description": "Defined the null and alternative hypotheses", "tags": ["theory"] }
+              ]
+            }
+          ]
+        }
+      }
+    },
+
+    "chemical-structure": {
+      "description": "Renders a 2D molecular structure diagram from a SMILES (Simplified Molecular Input Line Entry System) notation string. Uses the smiles-drawer library.",
+      "category": "scientific_and_technical",
+      "content": {
+        "type": "string",
+        "description": "A valid SMILES notation string representing the molecular structure.",
+        "smiles_examples": {
+          "Water": "O",
+          "Methane": "C",
+          "Ethanol": "CCO",
+          "Benzene": "c1ccccc1",
+          "Aspirin": "CC(=O)Oc1ccccc1C(=O)O",
+          "Caffeine": "CN1C=NC2=C1C(=O)N(C(=O)N2C)C",
+          "Glucose": "OC[C@H]1OC(O)[C@H](O)[C@@H](O)[C@@H]1O",
+          "Acetic acid": "CC(=O)O",
+          "Penicillin G": "CC1(C)SC2C(NC(=O)Cc3ccccc3)C(=O)N2C1C(=O)O"
+        }
+      },
+      "meta": {
+        "name": {
+          "type": "string",
+          "optional": true,
+          "description": "Common or IUPAC name of the molecule, displayed below the structure.",
+          "example": "Caffeine"
+        },
+        "theme": {
+          "type": "string",
+          "optional": true,
+          "default": "light",
+          "valid_values": ["light", "dark"],
+          "description": "Rendering theme passed to smiles-drawer. Match the page's color scheme."
+        }
+      },
+      "full_example": {
+        "id": "n27",
+        "type": "chemical-structure",
+        "label": "Caffeine structure",
+        "content": "CN1C=NC2=C1C(=O)N(C(=O)N2C)C",
+        "meta": { "name": "Caffeine (C₈H₁₀N₄O₂)", "theme": "light" }
+      }
+    },
+
+    "web-bookmark": {
+      "description": "A rich link preview card (OpenGraph-style). Displays title, description, site name, favicon, and optional thumbnail image. Wraps in a clickable anchor tag.",
+      "category": "media",
+      "content": {
+        "type": "object",
+        "description": "Object describing the linked page. The 'url' and 'title' fields are required.",
+        "fields": {
+          "url": { "type": "string", "description": "Full URL of the linked page (including https://)." },
+          "title": { "type": "string", "description": "Page title shown in bold." },
+          "description": { "type": "string", "optional": true, "description": "Brief description or excerpt from the page." },
+          "image": { "type": "string", "optional": true, "description": "URL of the thumbnail/preview image (shown on the right side)." },
+          "siteName": { "type": "string", "optional": true, "description": "Site or publisher name, e.g. 'Wikipedia', 'arXiv'." },
+          "favicon": { "type": "string", "optional": true, "description": "URL to the site favicon (16×16 or 32×32 icon)." }
+        }
+      },
+      "meta": null,
+      "full_example": {
+        "id": "n28",
+        "type": "web-bookmark",
+        "label": "Reference article",
+        "content": {
+          "url": "https://en.wikipedia.org/wiki/Calculus",
+          "title": "Calculus — Wikipedia",
+          "description": "Calculus is the mathematical study of continuous change, in the same way that geometry is the study of shape and algebra is the study of generalizations of arithmetic operations.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Integral_as_region_under_curve.svg/300px-Integral_as_region_under_curve.svg.png",
+          "siteName": "Wikipedia",
+          "favicon": "https://en.wikipedia.org/favicon.ico"
+        }
+      }
+    },
+
+    "file-pdf": {
+      "description": "Embeds a PDF document in an iframe viewer directly in the slide. Provides a fallback 'Open in new tab' link below.",
+      "category": "media",
+      "content": {
+        "type": "string",
+        "description": "Direct URL to a publicly accessible PDF file (must be HTTPS and allow iframe embedding via CORS).",
+        "example": "https://www.w3.org/WAI/WCAG21/wcag-2.1.pdf",
+        "note": "Many sites block iframe embedding. Use PDF files hosted on permissive servers (e.g. your own server, GitHub raw, arXiv, or Google Drive direct links)."
+      },
+      "meta": {
+        "title": {
+          "type": "string",
+          "optional": true,
+          "description": "Document title displayed above the PDF viewer.",
+          "example": "WCAG 2.1 Guidelines"
+        },
+        "height": {
+          "type": "number",
+          "optional": true,
+          "default": 600,
+          "description": "Height of the PDF viewer in pixels.",
+          "example": 800
+        }
+      },
+      "full_example": {
+        "id": "n29",
+        "type": "file-pdf",
+        "label": "Research paper",
+        "content": "https://arxiv.org/pdf/1706.03762",
+        "meta": {
+          "title": "Attention Is All You Need — Vaswani et al. (2017)",
+          "height": 700
+        }
+      }
+    },
+
+    "mention": {
+      "description": "An inline reference chip that links to a concept, chapter, person, or tag. Rendered as a pill-shaped badge with an @ prefix and a colored background tint matching its variant.",
+      "category": "navigation_and_reference",
+      "content": {
+        "type": "string",
+        "description": "The mention label text (the name of the concept, person, chapter, or tag).",
+        "example": "Angular Signals"
+      },
+      "meta": {
+        "variant": {
+          "type": "string",
+          "optional": true,
+          "default": "concept",
+          "valid_values": ["concept", "chapter", "person", "tag"],
+          "description": "Color scheme of the badge. 'concept' = blue, 'chapter' = purple, 'person' = green, 'tag' = gray."
+        },
+        "href": {
+          "type": "string",
+          "optional": true,
+          "description": "Optional URL or anchor link (e.g. '#section-3'). If provided, the mention becomes a clickable anchor tag.",
+          "example": "#chapter-3"
+        }
+      },
+      "full_example": {
+        "id": "n30",
+        "type": "mention",
+        "content": "Newton's Second Law",
+        "meta": { "variant": "concept", "href": "#newtons-laws" }
+      }
+    }
+  },
+
+  "llm_generation_rules": {
+    "description": "Rules the LLM MUST follow when generating a SmartPlayer slide JSON.",
+    "rules": [
+      "1. Every node MUST have a unique 'id' within the slide. Use 'n1', 'n2', 'n3'... or descriptive IDs like 'intro-text', 'formula-euler'.",
+      "2. The 'type' field must be one of the 30 exactly-spelled built-in types listed in this dictionary.",
+      "3. The 'content' field structure must exactly match the schema described for that type — do not use a string where an object is expected, or vice versa.",
+      "4. For 'math' nodes: provide raw LaTeX without $...$ delimiters. The renderer wraps it automatically.",
+      "5. For 'code' nodes: always set the 'language' field at the top level (not inside 'meta').",
+      "6. For 'columns-layout' nodes: child node IDs must still be globally unique across the entire slide.",
+      "7. For 'fill-blanks' nodes: use exactly triple underscores ___answer___ (3 underscores each side) to mark blanks.",
+      "8. For 'diagram' nodes: start with a valid Mermaid diagram type keyword on the first line.",
+      "9. All 'meta' fields are optional. Omit 'meta' entirely if no meta fields are needed.",
+      "10. The 'label' field is optional but recommended for all nodes — it helps users and developers identify content blocks.",
+      "11. Do not add extra fields outside the schema. Only use 'id', 'type', 'content', 'language', 'label', and 'meta'.",
+      "12. Generate slides with at least 5 nodes for meaningful educational content. Mix node types to create rich, varied content.",
+      "13. Node order matters: arrange nodes in logical reading order (e.g. heading → text → math → code).",
+      "14. Use 'divider' nodes to separate major sections visually.",
+      "15. The top-level 'slide' object requires 'id', 'title', and 'nodes'. The 'description' and 'tags' fields are recommended."
+    ]
+  },
+
+  "recommended_node_sequences": {
+    "description": "Common node composition patterns for different educational content types.",
+    "patterns": {
+      "concept_explanation": {
+        "description": "Explaining a new concept from scratch.",
+        "sequence": ["heading", "text", "key-concept", "math", "code", "callout", "progress"]
+      },
+      "step_by_step_tutorial": {
+        "description": "Walking through a procedure or algorithm.",
+        "sequence": ["heading", "text", "step-by-step", "code", "callout", "fill-blanks"]
+      },
+      "comparative_analysis": {
+        "description": "Comparing two approaches, theories, or concepts.",
+        "sequence": ["heading", "text", "columns-layout", "table", "callout"]
+      },
+      "scientific_lesson": {
+        "description": "A science lesson with formulas, diagrams, and media.",
+        "sequence": ["heading", "text", "math", "chemical-structure", "diagram", "image-caption", "key-concept", "flash-card"]
+      },
+      "interactive_quiz_module": {
+        "description": "A self-paced interactive assessment module.",
+        "sequence": ["heading", "text", "checklist", "fill-blanks", "flash-card", "progress"]
+      },
+      "rich_reference_page": {
+        "description": "A comprehensive reference with navigation and various content types.",
+        "sequence": ["toc", "heading", "text", "toggle-list", "table", "web-bookmark", "mention", "footnote"]
+      }
+    }
+  }
+}

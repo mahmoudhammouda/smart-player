@@ -28,6 +28,8 @@ A distributable Angular 19+ library package (`smart-player`) that renders struct
 6. **Custom Node Extensibility** — `SP_CUSTOM_NODES` injection token for consumer-defined node types
 7. **Upload Playground** — Load custom JSON slides via file drop or paste
 8. **7 Demo Scenarios** — Math, history, data structures, physics, rich content showcase, quiz, notion-style demo
+9. **Scenario Tab View** — Each scenario page has "Aperçu" (preview) and "JSON" tabs + copy button
+10. **LLM Node Dictionary** — `SP_NODE_DICTIONARY` + `buildLlmSystemPrompt()` exported from library; `/schema` page in demo to browse all 30 node types with examples and copy prompts
 9. **Dark Mode** — Full dark/light toggle with localStorage persistence
 10. **Promotional Landing Page** — Home page with install command, quick start, API reference, live demos
 
