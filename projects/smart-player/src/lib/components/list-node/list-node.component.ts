@@ -1,5 +1,7 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateList } from '../../validation/node-validators';
 
 interface ListItem {
   text: string;
@@ -67,5 +69,8 @@ export class ListNodeComponent {
         : '';
       return `<li>${item.text}${children}</li>`;
     }).join('');
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateList(node);
   }
 }

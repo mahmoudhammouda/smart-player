@@ -1,5 +1,7 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateHeading } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-heading-node',
@@ -45,4 +47,7 @@ export class HeadingNodeComponent {
     const l = meta?.['level'];
     return typeof l === 'number' ? l : 2;
   });
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateHeading(node);
+  }
 }

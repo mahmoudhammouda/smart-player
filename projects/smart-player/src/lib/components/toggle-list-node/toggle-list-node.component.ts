@@ -1,5 +1,7 @@
 import { Component, input, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateToggleList } from '../../validation/node-validators';
 
 interface ToggleItem {
   title: string;
@@ -109,5 +111,8 @@ export class ToggleListNodeComponent {
       next.add(index);
     }
     this.openSet.set(next);
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateToggleList(node);
   }
 }

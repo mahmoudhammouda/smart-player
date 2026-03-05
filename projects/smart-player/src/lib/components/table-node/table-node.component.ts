@@ -2,6 +2,8 @@ import {
   Component, input, computed, ChangeDetectionStrategy
 } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateTable } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-table-node',
@@ -92,4 +94,7 @@ export class TableNodeComponent {
     const meta = this.node().meta;
     return (meta?.['caption'] as string) ?? '';
   });
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateTable(node);
+  }
 }

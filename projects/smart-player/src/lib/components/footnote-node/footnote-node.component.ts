@@ -1,5 +1,7 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateFootnote } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-footnote-node',
@@ -21,4 +23,7 @@ import { SlideNode } from '../../models/slide.model';
 })
 export class FootnoteNodeComponent {
   node = input.required<SlideNode>();
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateFootnote(node);
+  }
 }

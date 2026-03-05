@@ -2,6 +2,8 @@ import {
   Component, input, computed, ChangeDetectionStrategy
 } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateDataBoard } from '../../validation/node-validators';
 
 interface Card {
   title: string;
@@ -193,4 +195,7 @@ export class DataBoardNodeComponent {
     const c = this.node().content;
     return (c && typeof c === 'object' && Array.isArray(c.columns)) ? c : { columns: [] };
   });
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateDataBoard(node);
+  }
 }

@@ -1,5 +1,7 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateWebBookmark } from '../../validation/node-validators';
 
 interface BookmarkContent {
   url: string;
@@ -126,4 +128,7 @@ export class WebBookmarkNodeComponent {
       return this.bookmark().url;
     }
   });
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateWebBookmark(node);
+  }
 }

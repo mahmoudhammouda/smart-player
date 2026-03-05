@@ -1,5 +1,7 @@
 import { Component, input, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateFillBlanks } from '../../validation/node-validators';
 
 interface Segment {
   type: 'text' | 'blank';
@@ -195,5 +197,8 @@ export class FillBlanksNodeComponent {
     this.answers.set([]);
     this.checked.set(false);
     this.results.set([]);
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateFillBlanks(node);
   }
 }

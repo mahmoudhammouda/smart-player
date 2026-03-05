@@ -1,5 +1,7 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateDivider } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-divider-node',
@@ -48,4 +50,7 @@ export class DividerNodeComponent {
     const style = this.node().meta?.['style'];
     return typeof style === 'string' ? style : 'line';
   });
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateDivider(node);
+  }
 }

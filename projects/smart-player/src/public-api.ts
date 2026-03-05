@@ -32,3 +32,5 @@ export * from './lib/components/data-board-node/data-board-node.component';
 export * from './lib/components/chemical-structure-node/chemical-structure-node.component';
 export * from './lib/components/file-pdf-node/file-pdf-node.component';
 export { SP_NODE_DICTIONARY, getNodeDefinition, buildLlmSystemPrompt } from './lib/llm-schema/index';
+export { validateSlide, NODE_VALIDATORS, SlideBaseSchema, SlideNodeBaseSchema } from './lib/validation/index';
+export type { ValidationIssue, ValidationResult, ValidationSeverity, NodeValidator } from './lib/validation/index';

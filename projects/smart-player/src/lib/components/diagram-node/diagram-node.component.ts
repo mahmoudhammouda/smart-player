@@ -3,6 +3,8 @@ import {
   effect, ChangeDetectionStrategy, Injector, inject, afterNextRender
 } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateDiagram } from '../../validation/node-validators';
 
 let mermaidInitialized = false;
 
@@ -123,5 +125,8 @@ export class DiagramNodeComponent {
       const errEl = document.getElementById(id);
       if (errEl) errEl.remove();
     }
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateDiagram(node);
   }
 }

@@ -2,6 +2,8 @@ import {
   Component, input, computed, ChangeDetectionStrategy
 } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateImageCaption } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-image-caption-node',
@@ -56,4 +58,7 @@ export class ImageCaptionNodeComponent {
     const meta = this.node().meta;
     return (meta?.['caption'] as string) ?? '';
   });
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateImageCaption(node);
+  }
 }

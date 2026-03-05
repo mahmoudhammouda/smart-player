@@ -3,6 +3,8 @@ import {
   effect, ChangeDetectionStrategy, Injector, inject, afterNextRender
 } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateCode } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-code-node',
@@ -165,5 +167,8 @@ export class CodeNodeComponent {
       this.copied.set(true);
       setTimeout(() => this.copied.set(false), 2000);
     } catch {}
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateCode(node);
   }
 }

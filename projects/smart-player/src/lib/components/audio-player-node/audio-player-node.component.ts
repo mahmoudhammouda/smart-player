@@ -2,6 +2,8 @@ import {
   Component, input, computed, ChangeDetectionStrategy
 } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateAudioPlayer } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-audio-player-node',
@@ -50,4 +52,7 @@ export class AudioPlayerNodeComponent {
     const meta = this.node().meta;
     return (meta?.['title'] as string) ?? '';
   });
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateAudioPlayer(node);
+  }
 }

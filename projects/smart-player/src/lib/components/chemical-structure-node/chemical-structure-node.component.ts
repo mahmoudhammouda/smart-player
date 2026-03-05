@@ -3,6 +3,8 @@ import {
   ChangeDetectionStrategy, afterNextRender
 } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateChemicalStructure } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-chemical-structure-node',
@@ -132,5 +134,8 @@ export class ChemicalStructureNodeComponent {
     } catch (e: unknown) {
       this.error.set(e instanceof Error ? e.message : 'Render failed');
     }
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateChemicalStructure(node);
   }
 }

@@ -3,6 +3,8 @@ import {
   effect, ChangeDetectionStrategy, Injector, inject, afterNextRender
 } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateMath } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-math-node',
@@ -70,5 +72,8 @@ export class MathNodeComponent {
     } catch {
       el.textContent = content;
     }
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateMath(node);
   }
 }

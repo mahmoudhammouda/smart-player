@@ -1,5 +1,7 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateText } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-text-node',
@@ -89,5 +91,8 @@ export class TextNodeComponent {
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
       .replace(/`(.+?)`/g, '<span class="sp-inline-code">$1</span>')
       .replace(/\$(.+?)\$/g, '<span class="sp-inline-math">$1</span>');
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateText(node);
   }
 }

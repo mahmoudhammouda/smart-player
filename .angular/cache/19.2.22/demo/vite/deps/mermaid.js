@@ -504,7 +504,7 @@ var detector5 = __name((txt) => {
 var loader5 = __name(() => __async(null, null, function* () {
   const {
     diagram: diagram2
-  } = yield import("./gitGraphDiagram-V2S2FVAM-ZVWJLFZC.js");
+  } = yield import("./gitGraphDiagram-V2S2FVAM-HHYXRJIZ.js");
   return {
     id: id5,
     diagram: diagram2
@@ -542,7 +542,7 @@ var detector7 = __name((txt) => {
 var loader7 = __name(() => __async(null, null, function* () {
   const {
     diagram: diagram2
-  } = yield import("./infoDiagram-HS3SLOUP-7KMBUN2L.js");
+  } = yield import("./infoDiagram-HS3SLOUP-SBMMTV2O.js");
   return {
     id: id7,
     diagram: diagram2
@@ -560,7 +560,7 @@ var detector8 = __name((txt) => {
 var loader8 = __name(() => __async(null, null, function* () {
   const {
     diagram: diagram2
-  } = yield import("./pieDiagram-ADFJNKIX-RG6PAGJY.js");
+  } = yield import("./pieDiagram-ADFJNKIX-FJ6FFNL7.js");
   return {
     id: id8,
     diagram: diagram2
@@ -896,7 +896,7 @@ var detector23 = __name((txt) => {
 var loader23 = __name(() => __async(null, null, function* () {
   const {
     diagram: diagram2
-  } = yield import("./diagram-S2PKOQOG-B43ZT4XS.js");
+  } = yield import("./diagram-S2PKOQOG-BQJFMLN5.js");
   return {
     id: id23,
     diagram: diagram2
@@ -914,7 +914,7 @@ var detector24 = __name((txt) => {
 var loader24 = __name(() => __async(null, null, function* () {
   const {
     diagram: diagram2
-  } = yield import("./diagram-QEK2KX5R-LTD7IF7A.js");
+  } = yield import("./diagram-QEK2KX5R-J7N4BO5O.js");
   return {
     id: id24,
     diagram: diagram2
@@ -951,7 +951,7 @@ var detector26 = __name((txt) => {
 var loader26 = __name(() => __async(null, null, function* () {
   const {
     diagram: diagram2
-  } = yield import("./architectureDiagram-VXUJARFQ-YE754AXF.js");
+  } = yield import("./architectureDiagram-VXUJARFQ-VB3QEGYL.js");
   return {
     id: id26,
     diagram: diagram2
@@ -970,7 +970,7 @@ var detector27 = __name((txt) => {
 var loader27 = __name(() => __async(null, null, function* () {
   const {
     diagram: diagram2
-  } = yield import("./diagram-PSM6KHXK-7L7NB47Q.js");
+  } = yield import("./diagram-PSM6KHXK-JSYDOWFD.js");
   return {
     id: id27,
     diagram: diagram2

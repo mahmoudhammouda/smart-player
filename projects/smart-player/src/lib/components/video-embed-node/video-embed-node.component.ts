@@ -3,6 +3,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateVideoEmbed } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-video-embed-node',
@@ -80,5 +82,8 @@ export class VideoEmbedNodeComponent {
       if (match) return match[1];
     }
     return null;
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateVideoEmbed(node);
   }
 }

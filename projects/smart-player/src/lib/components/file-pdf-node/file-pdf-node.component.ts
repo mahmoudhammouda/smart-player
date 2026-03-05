@@ -3,6 +3,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateFilePdf } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-file-pdf-node',
@@ -109,5 +111,8 @@ export class FilePdfNodeComponent {
 
   onLoad() {
     this.loading.set(false);
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateFilePdf(node);
   }
 }

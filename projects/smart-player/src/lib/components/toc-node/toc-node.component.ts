@@ -1,5 +1,7 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateToc } from '../../validation/node-validators';
 
 interface TocItem {
   title: string;
@@ -63,4 +65,7 @@ export class TocNodeComponent {
     const content = this.node().content;
     return Array.isArray(content) ? content : [];
   });
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateToc(node);
+  }
 }

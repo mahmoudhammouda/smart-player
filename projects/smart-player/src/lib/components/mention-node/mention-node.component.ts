@@ -1,5 +1,7 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateMention } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-mention-node',
@@ -53,4 +55,7 @@ export class MentionNodeComponent {
   content = computed(() => String(this.node().content || ''));
   href = computed(() => (this.node().meta?.['href'] as string) || null);
   variant = computed(() => (this.node().meta?.['variant'] as string) || 'concept');
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateMention(node);
+  }
 }

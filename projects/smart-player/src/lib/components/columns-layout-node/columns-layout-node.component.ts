@@ -4,6 +4,8 @@ import {
 import { NgComponentOutlet } from '@angular/common';
 import { SlideNode } from '../../models/slide.model';
 import { RegistryService } from '../../services/registry.service';
+import { ValidationIssue } from '../../validation/types';
+import { validateColumnsLayout } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-columns-layout-node',
@@ -57,5 +59,8 @@ export class ColumnsLayoutNodeComponent {
 
   getComponent(type: string): Type<unknown> | undefined {
     return this.registry.get(type);
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateColumnsLayout(node);
   }
 }

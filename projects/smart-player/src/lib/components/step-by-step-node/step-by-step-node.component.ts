@@ -1,5 +1,7 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateStepByStep } from '../../validation/node-validators';
 
 interface Step {
   title: string;
@@ -102,4 +104,7 @@ export class StepByStepNodeComponent {
       return [];
     }
   });
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateStepByStep(node);
+  }
 }

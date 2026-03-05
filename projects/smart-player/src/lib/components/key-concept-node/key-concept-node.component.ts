@@ -1,5 +1,7 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateKeyConcept } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-key-concept-node',
@@ -41,4 +43,7 @@ export class KeyConceptNodeComponent {
   node = input.required<SlideNode>();
 
   term = computed(() => (this.node().meta?.['term'] as string) || '');
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateKeyConcept(node);
+  }
 }

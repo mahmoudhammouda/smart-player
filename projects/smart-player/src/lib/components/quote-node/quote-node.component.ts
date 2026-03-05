@@ -1,5 +1,7 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateQuote } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-quote-node',
@@ -60,4 +62,7 @@ export class QuoteNodeComponent {
 
   author = computed(() => (this.node().meta?.['author'] as string) || '');
   source = computed(() => (this.node().meta?.['source'] as string) || '');
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateQuote(node);
+  }
 }

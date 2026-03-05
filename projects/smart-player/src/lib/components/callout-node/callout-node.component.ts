@@ -1,5 +1,7 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateCallout } from '../../validation/node-validators';
 
 const VARIANT_CONFIG: Record<string, { color: string; icon: string }> = {
   info:    { color: '#3b82f6', icon: '\u2139' },
@@ -74,4 +76,7 @@ export class CalloutNodeComponent {
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, 0.06)`;
   });
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateCallout(node);
+  }
 }

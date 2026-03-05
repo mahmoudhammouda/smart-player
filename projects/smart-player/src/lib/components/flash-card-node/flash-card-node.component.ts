@@ -1,5 +1,7 @@
 import { Component, input, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateFlashCard } from '../../validation/node-validators';
 
 interface FlashCard {
   front: string;
@@ -164,5 +166,8 @@ export class FlashCardNodeComponent {
       this.currentIndex.update(i => i + 1);
       this.flipped.set(false);
     }
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateFlashCard(node);
   }
 }

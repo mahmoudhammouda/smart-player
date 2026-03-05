@@ -1,5 +1,7 @@
 import { Component, input, signal, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateProgress } from '../../validation/node-validators';
 
 @Component({
   selector: 'sp-progress-node',
@@ -87,5 +89,8 @@ export class ProgressNodeComponent implements OnInit {
 
   toggle() {
     this.completed.update(v => !v);
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateProgress(node);
   }
 }

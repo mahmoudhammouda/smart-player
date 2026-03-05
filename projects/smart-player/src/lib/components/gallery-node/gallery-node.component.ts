@@ -2,6 +2,8 @@ import {
   Component, input, computed, ChangeDetectionStrategy
 } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateGallery } from '../../validation/node-validators';
 
 interface GalleryItem {
   url: string;
@@ -65,4 +67,7 @@ export class GalleryNodeComponent {
     if (Array.isArray(content)) return content;
     return [];
   });
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateGallery(node);
+  }
 }

@@ -1,5 +1,7 @@
 import { Component, input, signal, computed, ChangeDetectionStrategy, effect } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
+import { ValidationIssue } from '../../validation/types';
+import { validateChecklist } from '../../validation/node-validators';
 
 interface ChecklistItem {
   text: string;
@@ -105,5 +107,8 @@ export class ChecklistNodeComponent {
       newItems[index] = { ...newItems[index], checked: !newItems[index].checked };
       return newItems;
     });
+  }
+  static validate(node: Record<string, unknown>): ValidationIssue[] {
+    return validateChecklist(node);
   }
 }
