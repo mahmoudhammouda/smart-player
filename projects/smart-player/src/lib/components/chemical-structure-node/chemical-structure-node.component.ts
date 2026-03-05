@@ -1,6 +1,6 @@
 import {
   Component, input, signal, ElementRef, viewChild,
-  effect, ChangeDetectionStrategy, Injector, inject, afterNextRender
+  ChangeDetectionStrategy, afterNextRender
 } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
 
@@ -12,19 +12,18 @@ import { SlideNode } from '../../models/slide.model';
     <div class="sp-chemical-block">
       @if (error()) {
         <div class="sp-chemical-error">
-          <span class="sp-chemical-error-label">SMILES Error</span>
+          <span class="sp-chemical-error-label">⚠ Render error</span>
           <pre class="sp-chemical-error-text">{{ error() }}</pre>
         </div>
-      } @else {
-        <div class="sp-chemical-container">
-          <canvas #canvas data-testid="canvas-chemical-structure"></canvas>
-          @if (node().meta?.['name']) {
-            <div class="sp-chemical-name" data-testid="text-chemical-name">
-              {{ node().meta?.['name'] }}
-            </div>
-          }
-        </div>
       }
+      <div class="sp-chemical-container" [class.hidden]="!!error()">
+        <canvas #canvas data-testid="canvas-chemical-structure"></canvas>
+        @if (node().meta?.['name']) {
+          <div class="sp-chemical-name" data-testid="text-chemical-name">
+            {{ node().meta?.['name'] }}
+          </div>
+        }
+      </div>
     </div>
   `,
   styles: [`
@@ -48,6 +47,10 @@ import { SlideNode } from '../../models/slide.model';
       width: 100%;
     }
 
+    .sp-chemical-container.hidden {
+      display: none;
+    }
+
     canvas {
       max-width: 100%;
       height: auto;
@@ -57,17 +60,19 @@ import { SlideNode } from '../../models/slide.model';
       font-size: 0.875rem;
       color: var(--sp-muted-fg, #64748b);
       text-align: center;
+      font-style: italic;
     }
 
     .sp-chemical-error {
-      padding: 12px 16px;
-      border-radius: 8px;
+      padding: 10px 14px;
+      border-radius: 6px;
       background: rgba(239, 68, 68, 0.08);
-      border: 1px solid rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.2);
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
       width: 100%;
+      margin-bottom: 8px;
     }
 
     .sp-chemical-error-label {
@@ -77,7 +82,7 @@ import { SlideNode } from '../../models/slide.model';
     }
 
     .sp-chemical-error-text {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: #94a3b8;
       white-space: pre-wrap;
       font-family: var(--sp-font-mono, monospace);
@@ -88,47 +93,44 @@ import { SlideNode } from '../../models/slide.model';
 export class ChemicalStructureNodeComponent {
   node = input.required<SlideNode>();
   error = signal<string | null>(null);
-  canvas = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
-  private injector = inject(Injector);
+  canvas = viewChild<ElementRef<HTMLCanvasElement>>('canvas');
 
   constructor() {
     afterNextRender(() => {
-      effect(() => {
-        const smiles = this.node().content;
-        const theme = (this.node().meta?.['theme'] as 'light' | 'dark') || 'light';
-        const canvasEl = this.canvas().nativeElement;
-        if (smiles) {
-          this.renderStructure(smiles, canvasEl, theme);
-        }
-      }, { injector: this.injector });
+      this.render();
     });
   }
 
-  private async renderStructure(smiles: string, canvasEl: HTMLCanvasElement, theme: 'light' | 'dark'): Promise<void> {
+  private async render(): Promise<void> {
+    const smiles = String(this.node().content || '');
+    const theme = (this.node().meta?.['theme'] as 'light' | 'dark') || 'light';
+    const canvasEl = this.canvas()?.nativeElement;
+    if (!canvasEl || !smiles) return;
+
     try {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const SmilesDrawer = (await import('smiles-drawer')).default;
-      const options = {
-        width: 300,
-        height: 200,
-        bondThickness: 1.5,
-        bondLength: 20,
-        fontSizeLarge: 10,
-        fontSizeSmall: 7,
-      };
-      
-      const drawer = new SmilesDrawer.SmiDrawer(options);
-      
-      SmilesDrawer.parse(smiles, (tree: any) => {
-        drawer.draw(tree, canvasEl, theme, false);
+      const SD = await import('smiles-drawer');
+      const SmilesDrawer = SD.default ?? SD;
+
+      const options = { width: 300, height: 220 };
+
+      if (SmilesDrawer.SmiDrawer) {
+        const drawer = new SmilesDrawer.SmiDrawer(options);
+        SmilesDrawer.parse(
+          smiles,
+          (tree: unknown) => { drawer.draw(tree, canvasEl, theme, false); this.error.set(null); },
+          (err: unknown) => { this.error.set(String(err)); }
+        );
+      } else if (typeof SmilesDrawer === 'function') {
+        const drawer = new SmilesDrawer(options);
+        drawer.draw(smiles, canvasEl);
         this.error.set(null);
-      }, (err: any) => {
-        this.error.set(String(err));
-      });
+      } else {
+        this.error.set('SmilesDrawer API not recognised.');
+      }
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Chemical structure render error';
-      this.error.set(msg);
+      this.error.set(e instanceof Error ? e.message : 'Render failed');
     }
   }
 }

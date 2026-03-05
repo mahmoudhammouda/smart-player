@@ -96,7 +96,7 @@ export class ChecklistNodeComponent {
       if (Array.isArray(content)) {
         this.items.set(content.map(i => ({ ...i })));
       }
-    }, { allowSignalWrites: true });
+    });
   }
 
   toggleItem(index: number) {

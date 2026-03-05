@@ -1,4 +1,4 @@
-import { Component, input, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { SlideNode } from '../../models/slide.model';
 
 interface ToggleItem {
@@ -13,19 +13,18 @@ interface ToggleItem {
   template: `
     <div class="toggle-list">
       @for (item of items(); track $index) {
-        <div class="toggle-item" [class.open]="openItems().has($index)">
-          <div 
-            class="toggle-header" 
+        <div class="toggle-item" [class.open]="isOpen($index)">
+          <button
+            class="toggle-header"
             (click)="toggleItem($index)"
+            [attr.aria-expanded]="openSet().has($index)"
             data-testid="button-toggle-item"
           >
-            <span class="chevron">{{ openItems().has($index) ? '▼' : '▶' }}</span>
+            <span class="chevron" aria-hidden="true">{{ openSet().has($index) ? '▼' : '▶' }}</span>
             <span class="title">{{ item.title }}</span>
-          </div>
-          <div class="toggle-body-wrapper">
-            <div class="toggle-body">
-              {{ item.body }}
-            </div>
+          </button>
+          <div class="toggle-body-wrapper" [class.open]="openSet().has($index)">
+            <div class="toggle-body">{{ item.body }}</div>
           </div>
         </div>
       }
@@ -36,6 +35,9 @@ interface ToggleItem {
     .toggle-list {
       display: flex;
       flex-direction: column;
+      border: 1px solid var(--sp-border, #e2e8f0);
+      border-radius: 8px;
+      overflow: hidden;
     }
     .toggle-item {
       border-bottom: 1px solid var(--sp-border, #e2e8f0);
@@ -46,59 +48,66 @@ interface ToggleItem {
     .toggle-header {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px;
+      gap: 10px;
+      padding: 12px 14px;
       cursor: pointer;
-      transition: background-color 0.2s;
       font-weight: 500;
+      font-size: 1rem;
+      color: var(--sp-foreground, #1e293b);
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      transition: background 0.15s;
     }
     .toggle-header:hover {
-      background-color: var(--sp-muted, #f1f5f9);
+      background: var(--sp-muted, #f1f5f9);
     }
     .chevron {
-      font-size: 0.8em;
-      width: 1.2em;
-      display: inline-flex;
-      justify-content: center;
+      font-size: 0.72em;
+      width: 1.1em;
+      flex-shrink: 0;
       color: var(--sp-muted-fg, #64748b);
+      transition: transform 0.2s;
     }
     .toggle-body-wrapper {
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 0.3s ease-out;
+      max-height: 0;
       overflow: hidden;
+      transition: max-height 0.3s ease;
     }
-    .open > .toggle-body-wrapper {
-      grid-template-rows: 1fr;
+    .toggle-body-wrapper.open {
+      max-height: 600px;
     }
     .toggle-body {
-      min-height: 0;
-      padding: 12px 0 12px 32px;
+      padding: 12px 14px 14px 38px;
       color: var(--sp-foreground, #1e293b);
-      line-height: 1.6;
+      line-height: 1.65;
+      font-size: 0.95rem;
     }
   `]
 })
 export class ToggleListNodeComponent {
   node = input.required<SlideNode>();
-  openItems = signal<Set<number>>(new Set());
 
-  items = signal<ToggleItem[]>([]);
-
-  constructor() {
+  items = computed<ToggleItem[]>(() => {
     const content = this.node().content;
-    if (Array.isArray(content)) {
-      this.items.set(content);
-    }
+    return Array.isArray(content) ? content : [];
+  });
+
+  openSet = signal<Set<number>>(new Set());
+
+  isOpen(index: number): boolean {
+    return this.openSet().has(index);
   }
 
   toggleItem(index: number) {
-    const newSet = new Set(this.openItems());
-    if (newSet.has(index)) {
-      newSet.delete(index);
+    const next = new Set(this.openSet());
+    if (next.has(index)) {
+      next.delete(index);
     } else {
-      newSet.add(index);
+      next.add(index);
     }
-    this.openItems.set(newSet);
+    this.openSet.set(next);
   }
 }

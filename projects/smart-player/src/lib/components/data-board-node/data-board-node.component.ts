@@ -1,7 +1,6 @@
 import {
-  Component, input, ChangeDetectionStrategy
+  Component, input, computed, ChangeDetectionStrategy
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { SlideNode } from '../../models/slide.model';
 
 interface Card {
@@ -24,7 +23,6 @@ interface DataBoardContent {
 @Component({
   selector: 'sp-data-board-node',
   standalone: true,
-  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="sp-data-board">
@@ -191,7 +189,8 @@ interface DataBoardContent {
 export class DataBoardNodeComponent {
   node = input.required<SlideNode>();
 
-  boardContent() {
-    return (this.node().content as DataBoardContent) || { columns: [] };
-  }
+  boardContent = computed<DataBoardContent>(() => {
+    const c = this.node().content;
+    return (c && typeof c === 'object' && Array.isArray(c.columns)) ? c : { columns: [] };
+  });
 }
