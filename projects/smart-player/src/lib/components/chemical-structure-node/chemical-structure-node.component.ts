@@ -19,7 +19,7 @@ import { validateChemicalStructure } from '../../validation/node-validators';
         </div>
       }
       <div class="sp-chemical-container" [class.hidden]="!!error()">
-        <canvas #canvas data-testid="canvas-chemical-structure"></canvas>
+        <div #svgContainer class="sp-svg-host" data-testid="canvas-chemical-structure"></div>
         @if (node().meta?.['name']) {
           <div class="sp-chemical-name" data-testid="text-chemical-name">
             {{ node().meta?.['name'] }}
@@ -53,7 +53,13 @@ import { validateChemicalStructure } from '../../validation/node-validators';
       display: none;
     }
 
-    canvas {
+    .sp-svg-host {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .sp-svg-host svg {
       max-width: 100%;
       height: auto;
     }
@@ -95,7 +101,7 @@ import { validateChemicalStructure } from '../../validation/node-validators';
 export class ChemicalStructureNodeComponent {
   node = input.required<SlideNode>();
   error = signal<string | null>(null);
-  canvas = viewChild<ElementRef<HTMLCanvasElement>>('canvas');
+  svgContainer = viewChild<ElementRef<HTMLDivElement>>('svgContainer');
 
   constructor() {
     afterNextRender(() => {
@@ -106,8 +112,8 @@ export class ChemicalStructureNodeComponent {
   private async render(): Promise<void> {
     const smiles = String(this.node().content || '');
     const theme = (this.node().meta?.['theme'] as 'light' | 'dark') || 'light';
-    const canvasEl = this.canvas()?.nativeElement;
-    if (!canvasEl || !smiles) return;
+    const container = this.svgContainer()?.nativeElement;
+    if (!container || !smiles) return;
 
     try {
       // @ts-ignore
@@ -119,25 +125,37 @@ export class ChemicalStructureNodeComponent {
         const drawer = new SmilesDrawer.SmiDrawer(options);
         drawer.draw(
           smiles,
-          canvasEl,
+          'svg',
           theme,
-          () => { this.error.set(null); },
+          (svgEl: SVGElement) => {
+            this.error.set(null);
+            container.innerHTML = '';
+            container.appendChild(svgEl);
+          },
           (err: unknown) => { this.error.set(String(err)); }
         );
       } else if (SmilesDrawer.Drawer) {
         const drawer = new SmilesDrawer.Drawer(options);
         SmilesDrawer.parse(
           smiles,
-          (tree: unknown) => { drawer.draw(tree, canvasEl, theme, false); this.error.set(null); },
+          (tree: unknown) => {
+            const svg = drawer.draw(tree, null, theme, false);
+            if (svg instanceof SVGElement) {
+              this.error.set(null);
+              container.innerHTML = '';
+              container.appendChild(svg);
+            }
+          },
           (err: unknown) => { this.error.set(String(err)); }
         );
       } else {
-        this.error.set('SmilesDrawer API non reconnue.');
+        this.error.set('SmilesDrawer API not recognised.');
       }
     } catch (e: unknown) {
       this.error.set(e instanceof Error ? e.message : 'Render failed');
     }
   }
+
   static validate(node: Record<string, unknown>): ValidationIssue[] {
     return validateChemicalStructure(node);
   }

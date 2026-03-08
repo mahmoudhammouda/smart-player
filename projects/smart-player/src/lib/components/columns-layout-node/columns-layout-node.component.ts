@@ -1,5 +1,5 @@
 import {
-  Component, input, inject, ChangeDetectionStrategy, Type
+  Component, input, inject, computed, ChangeDetectionStrategy, Type
 } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
 import { SlideNode } from '../../models/slide.model';
@@ -48,14 +48,12 @@ export class ColumnsLayoutNodeComponent {
   node = input.required<SlideNode>();
   private registry = inject(RegistryService);
 
-  columns() {
-    return (this.node().content as SlideNode[][]) || [];
-  }
+  columns = computed<SlideNode[][]>(() => (this.node().content as SlideNode[][]) || []);
 
-  gridTemplate() {
-    const count = this.node().meta?.['columns'] as number || this.columns().length || 1;
+  gridTemplate = computed(() => {
+    const count = (this.node().meta?.['columns'] as number) || this.columns().length || 1;
     return `repeat(${count}, 1fr)`;
-  }
+  });
 
   getComponent(type: string): Type<unknown> | undefined {
     return this.registry.get(type);
