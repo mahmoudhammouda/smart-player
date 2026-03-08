@@ -1,0 +1,19 @@
+{
+  "latest": "1.0.0",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-03-08",
+      "archive": "v1.0.0/smart-player-1.0.0.tar.gz",
+      "releaseNotes": "v1.0.0/RELEASE_NOTES.md",
+      "size": "85 Ko",
+      "highlights": [
+        "30 types de noeuds intégrés",
+        "Dictionnaire LLM + System Prompt",
+        "Validation JSON 2 couches",
+        "Extension via SP_CUSTOM_NODES",
+        "Dark mode & CSS variables"
+      ]
+    }
+  ]
+}

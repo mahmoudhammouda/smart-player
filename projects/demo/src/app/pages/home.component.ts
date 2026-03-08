@@ -27,28 +27,47 @@ import { MOCK_SCENARIOS } from '../data/mock-scenarios';
           Drop it into any Angular 19+ app in minutes.
         </p>
 
+        <div class="release-card" data-testid="card-latest-release">
+          <div class="release-header">
+            <div class="release-version-row">
+              <span class="release-version">v{{ latestRelease.version }}</span>
+              <span class="release-badge">Latest</span>
+            </div>
+            <span class="release-date">{{ latestRelease.date }}</span>
+          </div>
+          <ul class="release-highlights">
+            @for (h of latestRelease.highlights; track h) {
+              <li>{{ h }}</li>
+            }
+          </ul>
+          <div class="release-actions">
+            <a class="btn btn-download" [href]="'/releases/v' + latestRelease.version + '/smart-player-' + latestRelease.version + '.tar.gz'" [download]="'smart-player-' + latestRelease.version + '.tar.gz'" data-testid="link-download-package">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              smart-player-{{ latestRelease.version }}.tar.gz
+              <span class="download-size">({{ latestRelease.size }})</span>
+            </a>
+            <a class="btn btn-outline btn-sm" [href]="'/releases/v' + latestRelease.version + '/RELEASE_NOTES.md'" target="_blank" data-testid="link-release-notes">
+              Release Notes
+            </a>
+          </div>
+        </div>
+
         <div class="install-steps">
           <div class="install-step">
             <span class="install-step-num">1</span>
-            <span class="install-step-label">Téléchargez le package</span>
-          </div>
-          <a class="btn btn-download" href="/smart-player.tar.gz" download="smart-player.tar.gz" data-testid="link-download-package">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            smart-player.tar.gz
-            <span class="download-size">(85 Ko)</span>
-          </a>
-
-          <div class="install-step">
-            <span class="install-step-num">2</span>
-            <span class="install-step-label">Extrayez et installez dans votre projet</span>
+            <span class="install-step-label">Extrayez l'archive</span>
           </div>
           <div class="install-box">
             <span class="install-dollar">$</span>
-            <code class="install-cmd">tar xzf smart-player.tar.gz -C ./smart-player</code>
-            <button class="copy-btn" (click)="copy('tar xzf smart-player.tar.gz -C ./smart-player', $event)" title="Copy">
+            <code class="install-cmd">tar xzf smart-player-{{ latestRelease.version }}.tar.gz -C ./smart-player</code>
+            <button class="copy-btn" (click)="copy('tar xzf smart-player-' + latestRelease.version + '.tar.gz -C ./smart-player', $event)" title="Copy">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
               @if (copied()) { <span style="font-size:0.7rem">Copied!</span> }
             </button>
+          </div>
+          <div class="install-step">
+            <span class="install-step-num">2</span>
+            <span class="install-step-label">Installez dans votre projet Angular</span>
           </div>
           <div class="install-box">
             <span class="install-dollar">$</span>
@@ -57,6 +76,17 @@ import { MOCK_SCENARIOS } from '../data/mock-scenarios';
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
               @if (copied()) { <span style="font-size:0.7rem">Copied!</span> }
             </button>
+          </div>
+        </div>
+
+        <div class="release-includes">
+          <span class="release-includes-title">Le package inclut :</span>
+          <div class="release-includes-list">
+            <span class="release-include-item">30 composants Angular</span>
+            <span class="release-include-item">Dictionnaire LLM JSON</span>
+            <span class="release-include-item">System Prompt Builder</span>
+            <span class="release-include-item">Validation Zod</span>
+            <span class="release-include-item">Types TypeScript</span>
           </div>
         </div>
 
@@ -395,6 +425,109 @@ export const appConfig = &#123;
     .copy-btn:hover {
       background: var(--muted, #f1f5f9);
       color: var(--fg, #1e293b);
+    }
+
+    .release-card {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto 20px;
+      border: 1px solid var(--card-border, #e2e8f0);
+      border-radius: 12px;
+      padding: 20px;
+      background: var(--card, #ffffff);
+      text-align: left;
+    }
+
+    .release-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .release-version-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .release-version {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--fg, #1e293b);
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    .release-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.12);
+      color: #059669;
+    }
+
+    .release-date {
+      font-size: 0.8rem;
+      color: var(--muted-fg, #94a3b8);
+    }
+
+    .release-highlights {
+      margin: 0 0 16px;
+      padding: 0 0 0 18px;
+      font-size: 0.85rem;
+      color: var(--muted-fg, #64748b);
+      line-height: 1.7;
+    }
+
+    .release-highlights li {
+      margin-bottom: 2px;
+    }
+
+    .release-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-sm {
+      padding: 6px 14px;
+      font-size: 0.8rem;
+    }
+
+    .release-includes {
+      width: 100%;
+      max-width: 520px;
+      margin: 16px auto 0;
+      text-align: center;
+    }
+
+    .release-includes-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted-fg, #64748b);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .release-includes-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .release-include-item {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--muted, #f1f5f9);
+      color: var(--muted-fg, #64748b);
     }
 
     .install-steps {
@@ -1022,6 +1155,10 @@ export const appConfig = &#123;
     :host-context(.dark) .install-cmd { color: #e2e8f0; }
     :host-context(.dark) .install-step-label { color: #e2e8f0; }
     :host-context(.dark) .btn-download { box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3); }
+    :host-context(.dark) .release-card { background: #1e293b; border-color: #334155; }
+    :host-context(.dark) .release-version { color: #f1f5f9; }
+    :host-context(.dark) .release-badge { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    :host-context(.dark) .release-include-item { background: #334155; color: #94a3b8; }
     :host-context(.dark) .extend-section { background: color-mix(in srgb, #3b82f6 8%, #1e293b); }
     :host-context(.dark) .extend-title { color: #f1f5f9; }
     :host-context(.dark) .api-table-wrap { border-color: #334155; }
@@ -1048,8 +1185,21 @@ export class HomeComponent {
   scenarios = MOCK_SCENARIOS;
   copied = signal(false);
 
+  latestRelease = {
+    version: '1.0.0',
+    date: '2026-03-08',
+    size: '85 Ko',
+    highlights: [
+      '30 types de noeuds intégrés',
+      'Dictionnaire LLM + System Prompt',
+      'Validation JSON 2 couches',
+      'Extension via SP_CUSTOM_NODES',
+      'Dark mode & CSS variables',
+    ],
+  };
+
   features = [
-    { icon: 'Aa', title: '22 Node Types', tag: '6 categories', desc: 'Typography, pedagogy, science, multimedia, interactive, and navigation — all built in.' },
+    { icon: 'Aa', title: '30 Node Types', tag: '6 categories', desc: 'Typography, pedagogy, science, multimedia, interactive, and navigation — all built in.' },
     { icon: 'Σ', title: 'KaTeX Math', tag: 'type: math', desc: 'Beautiful typeset equations in display and inline mode with custom macros.' },
     { icon: '</>', title: 'Syntax Highlighting', tag: 'type: code', desc: 'Highlight.js powered code blocks with copy-to-clipboard and language label.' },
     { icon: '◇', title: 'Mermaid Diagrams', tag: 'type: diagram', desc: 'Flowcharts, sequence diagrams, ER diagrams, and Gantt charts from text.' },
