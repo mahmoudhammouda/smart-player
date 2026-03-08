@@ -1,5 +1,5 @@
 import {
-  Component, signal, ChangeDetectionStrategy, HostListener
+  Component, signal, ChangeDetectionStrategy, HostListener, OnDestroy, ViewEncapsulation
 } from '@angular/core';
 
 export interface LightboxContent {
@@ -14,43 +14,23 @@ export interface LightboxContent {
   selector: 'sp-lightbox',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    @if (visible()) {
-      <div class="sp-lightbox-overlay" (click)="close()" data-testid="lightbox-overlay">
-        <button class="sp-lightbox-close" (click)="close()" data-testid="button-lightbox-close">&times;</button>
-        <div class="sp-lightbox-content" (click)="$event.stopPropagation()">
-          @if (content()?.type === 'image') {
-            <img
-              class="sp-lightbox-image"
-              [src]="content()!.src"
-              [alt]="content()!.alt ?? ''"
-              data-testid="lightbox-image"
-            />
-          } @else {
-            <div class="sp-lightbox-html" #htmlHost></div>
-          }
-          @if (content()?.caption) {
-            <div class="sp-lightbox-caption" data-testid="lightbox-caption">{{ content()!.caption }}</div>
-          }
-        </div>
-      </div>
-    }
-  `,
+  encapsulation: ViewEncapsulation.None,
+  template: ``,
   styles: [`
     .sp-lightbox-overlay {
       position: fixed;
       inset: 0;
       z-index: 10000;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.88);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
       cursor: zoom-out;
-      animation: sp-lightbox-fade-in 0.2s ease;
+      animation: sp-lb-fade-in 0.2s ease;
     }
 
-    @keyframes sp-lightbox-fade-in {
+    @keyframes sp-lb-fade-in {
       from { opacity: 0; }
       to { opacity: 1; }
     }
@@ -60,10 +40,10 @@ export interface LightboxContent {
       top: 16px;
       right: 20px;
       z-index: 10001;
-      background: none;
+      background: rgba(255, 255, 255, 0.1);
       border: none;
       color: #fff;
-      font-size: 2rem;
+      font-size: 1.8rem;
       cursor: pointer;
       width: 44px;
       height: 44px;
@@ -76,95 +56,124 @@ export interface LightboxContent {
     }
 
     .sp-lightbox-close:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.25);
     }
 
-    .sp-lightbox-content {
+    .sp-lightbox-body {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
-      max-width: 95vw;
-      max-height: 92vh;
+      gap: 14px;
+      max-width: 94vw;
+      max-height: 90vh;
       cursor: default;
     }
 
-    .sp-lightbox-image {
-      max-width: 95vw;
-      max-height: 85vh;
+    .sp-lightbox-body img {
+      max-width: 94vw;
+      max-height: 84vh;
       object-fit: contain;
       border-radius: 6px;
+      display: block;
     }
 
-    .sp-lightbox-html {
-      max-width: 95vw;
-      max-height: 85vh;
+    .sp-lightbox-diagram {
+      max-width: 94vw;
+      max-height: 84vh;
       overflow: auto;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #fff;
-      border-radius: 8px;
-      padding: 24px;
+      border-radius: 10px;
+      padding: 32px;
     }
 
-    .sp-lightbox-html svg {
-      max-width: 90vw;
-      max-height: 80vh;
-      width: auto;
-      height: auto;
+    .sp-lightbox-diagram svg {
+      width: auto !important;
+      height: auto !important;
+      max-width: 88vw;
+      max-height: 78vh;
+      display: block;
     }
 
     .sp-lightbox-caption {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.88rem;
       text-align: center;
       max-width: 600px;
       line-height: 1.5;
+      font-family: system-ui, sans-serif;
     }
   `]
 })
-export class LightboxComponent {
+export class LightboxComponent implements OnDestroy {
   visible = signal(false);
-  content = signal<LightboxContent | null>(null);
 
-  private htmlHost: HTMLElement | null = null;
+  private overlayEl: HTMLElement | null = null;
 
   open(data: LightboxContent): void {
-    this.content.set(data);
-    this.visible.set(true);
-    document.body.style.overflow = 'hidden';
+    this.close();
 
-    if (data.type === 'html' && data.htmlElement) {
-      requestAnimationFrame(() => {
-        const host = document.querySelector('.sp-lightbox-html');
-        if (host) {
-          host.innerHTML = '';
-          const clone = data.htmlElement!.cloneNode(true) as Element;
-          if (clone instanceof SVGElement) {
-            clone.removeAttribute('width');
-            clone.removeAttribute('height');
-            clone.setAttribute('style', 'max-width:90vw;max-height:80vh;width:auto;height:auto;');
-          } else if (clone instanceof HTMLElement) {
-            clone.style.maxWidth = '90vw';
-            clone.style.maxHeight = '80vh';
-          }
-          const svgs = clone.querySelectorAll('svg');
-          svgs.forEach(svg => {
-            svg.removeAttribute('width');
-            svg.removeAttribute('height');
-            svg.setAttribute('style', 'max-width:90vw;max-height:80vh;width:auto;height:auto;');
-          });
-          host.appendChild(clone);
-        }
+    const overlay = document.createElement('div');
+    overlay.className = 'sp-lightbox-overlay';
+    overlay.addEventListener('click', () => this.close());
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'sp-lightbox-close';
+    closeBtn.innerHTML = '&times;';
+    closeBtn.addEventListener('click', (e) => { e.stopPropagation(); this.close(); });
+    overlay.appendChild(closeBtn);
+
+    const body = document.createElement('div');
+    body.className = 'sp-lightbox-body';
+    body.addEventListener('click', (e) => e.stopPropagation());
+
+    if (data.type === 'image' && data.src) {
+      const img = document.createElement('img');
+      img.src = data.src;
+      img.alt = data.alt ?? '';
+      body.appendChild(img);
+    } else if (data.type === 'html' && data.htmlElement) {
+      const container = document.createElement('div');
+      container.className = 'sp-lightbox-diagram';
+      const clone = data.htmlElement.cloneNode(true) as Element;
+      if (clone instanceof SVGElement) {
+        clone.removeAttribute('width');
+        clone.removeAttribute('height');
+        clone.removeAttribute('style');
+      }
+      const innerSvgs = clone.querySelectorAll('svg');
+      innerSvgs.forEach(svg => {
+        svg.removeAttribute('width');
+        svg.removeAttribute('height');
+        svg.removeAttribute('style');
       });
+      container.appendChild(clone);
+      body.appendChild(container);
     }
+
+    if (data.caption) {
+      const cap = document.createElement('div');
+      cap.className = 'sp-lightbox-caption';
+      cap.textContent = data.caption;
+      body.appendChild(cap);
+    }
+
+    overlay.appendChild(body);
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+    this.overlayEl = overlay;
+    this.visible.set(true);
   }
 
   close(): void {
-    this.visible.set(false);
-    this.content.set(null);
-    document.body.style.overflow = '';
+    if (this.overlayEl) {
+      this.overlayEl.remove();
+      this.overlayEl = null;
+      document.body.style.overflow = '';
+      this.visible.set(false);
+    }
   }
 
   @HostListener('document:keydown.escape')
@@ -172,5 +181,9 @@ export class LightboxComponent {
     if (this.visible()) {
       this.close();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.close();
   }
 }
