@@ -159,6 +159,7 @@ export class AppComponent {
       rich: '\u{1F4DA}',
       quiz: '?',
       notion: '\u{1F4D3}',
+      rxjs: '\u{1F504}',
     };
     return icons[icon] || icon;
   }

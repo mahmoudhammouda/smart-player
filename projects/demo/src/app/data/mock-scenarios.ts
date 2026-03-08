@@ -1,6 +1,8 @@
 import { Scenario } from 'smart-player';
+import { RXJS_COURSE } from './rxjs-course';
 
 export const MOCK_SCENARIOS: Scenario[] = [
+  RXJS_COURSE,
   {
     id: 'math-lesson',
     name: 'Calculus Fundamentals',
