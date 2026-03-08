@@ -1,0 +1,46 @@
+name: Build & Publish to GitHub Packages
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@mahmoudhammouda'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build library
+        run: npx ng build smart-player --configuration production
+
+      - name: Copy README into dist
+        run: cp README.md dist/smart-player/README.md
+
+      - name: Set package version from release tag
+        working-directory: dist/smart-player
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
+          VERSION="${VERSION#v}"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+
+      - name: Publish to GitHub Packages
+        working-directory: dist/smart-player
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
