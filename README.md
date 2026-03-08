@@ -29,20 +29,24 @@ SmartPlayer takes a JSON object (a `Slide`) produced by any LLM and renders it a
 
 ## Quick Start
 
-### 1. Install
+### 1. Configure registry
 
-```bash
-npm install smart-player
+SmartPlayer is published on **GitHub Packages**. Add this to your project's `.npmrc`:
+
+```ini
+@mahmoudhammouda:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
 
-Or from a tarball release:
+You need a GitHub personal access token with `read:packages` scope. Set it as the `GITHUB_TOKEN` environment variable, or replace `${GITHUB_TOKEN}` directly in `.npmrc`.
+
+### 2. Install
 
 ```bash
-tar xzf smart-player-1.0.0.tar.gz -C ./smart-player
-npm install ./smart-player
+npm install @mahmoudhammouda/smart-player
 ```
 
-### 2. Install peer dependencies
+### 3. Install peer dependencies
 
 ```bash
 npm install katex mermaid highlight.js
@@ -53,11 +57,11 @@ Optional (only if you use those node types):
 npm install smiles-drawer   # chemical-structure nodes
 ```
 
-### 3. Use in your Angular component
+### 4. Use in your Angular component
 
 ```typescript
 import { Component } from '@angular/core';
-import { SmartPlayerComponent, Slide } from 'smart-player';
+import { SmartPlayerComponent, Slide } from '@mahmoudhammouda/smart-player';
 
 @Component({
   selector: 'app-lesson',
@@ -207,7 +211,7 @@ SmartPlayer exports everything an LLM needs to generate valid slides.
 The fastest way to integrate — call `buildLlmSystemPrompt()` and inject the result into your LLM's system message:
 
 ```typescript
-import { buildLlmSystemPrompt } from 'smart-player';
+import { buildLlmSystemPrompt } from '@mahmoudhammouda/smart-player';
 
 // Full prompt with all 30 node types and examples
 const systemPrompt = buildLlmSystemPrompt();
@@ -239,7 +243,7 @@ const slide: Slide = JSON.parse(response.choices[0].message.content);
 For more control, access the raw dictionary:
 
 ```typescript
-import { SP_NODE_DICTIONARY, getNodeDefinition } from 'smart-player';
+import { SP_NODE_DICTIONARY, getNodeDefinition } from '@mahmoudhammouda/smart-player';
 
 // Full dictionary (1100-line JSON with all node schemas, examples, and rules)
 console.log(SP_NODE_DICTIONARY);
@@ -260,7 +264,7 @@ The dictionary includes:
 #### OpenAI (GPT-4o)
 
 ```typescript
-import { buildLlmSystemPrompt, validateSlide, Slide } from 'smart-player';
+import { buildLlmSystemPrompt, validateSlide, Slide } from '@mahmoudhammouda/smart-player';
 import OpenAI from 'openai';
 
 const openai = new OpenAI();
@@ -292,7 +296,7 @@ async function generateLesson(topic: string): Promise<Slide> {
 #### Anthropic (Claude)
 
 ```typescript
-import { buildLlmSystemPrompt, Slide } from 'smart-player';
+import { buildLlmSystemPrompt, Slide } from '@mahmoudhammouda/smart-player';
 import Anthropic from '@anthropic-ai/sdk';
 
 const anthropic = new Anthropic();
@@ -318,7 +322,7 @@ async function generateLesson(topic: string): Promise<Slide> {
 The system prompt is plain text — it works with any API or local model:
 
 ```typescript
-import { buildLlmSystemPrompt } from 'smart-player';
+import { buildLlmSystemPrompt } from '@mahmoudhammouda/smart-player';
 
 const systemPrompt = buildLlmSystemPrompt();
 
@@ -341,7 +345,7 @@ const response = await fetch('http://localhost:11434/api/generate', {
 SmartPlayer includes a **two-layer Zod-based validation** system:
 
 ```typescript
-import { validateSlide } from 'smart-player';
+import { validateSlide } from '@mahmoudhammouda/smart-player';
 
 const result = validateSlide(jsonFromLLM);
 
@@ -390,7 +394,7 @@ Extend SmartPlayer with your own node types using the `SP_CUSTOM_NODES` injectio
 
 ```typescript
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
-import { SlideNode } from 'smart-player';
+import { SlideNode } from '@mahmoudhammouda/smart-player';
 
 @Component({
   selector: 'app-quiz-node',
@@ -414,7 +418,7 @@ export class QuizNodeComponent {
 
 ```typescript
 // app.config.ts
-import { SP_CUSTOM_NODES } from 'smart-player';
+import { SP_CUSTOM_NODES } from '@mahmoudhammouda/smart-player';
 import { QuizNodeComponent } from './components/quiz-node.component';
 
 export const appConfig: ApplicationConfig = {
@@ -470,7 +474,7 @@ sp-smart-player {
 Each node can emit a **refine event** when the user clicks the "Refine" button (Ghost UI — visible on hover). This lets you send a specific node back to the LLM for targeted regeneration:
 
 ```typescript
-import { SmartPlayerComponent, RefineEvent, Slide } from 'smart-player';
+import { SmartPlayerComponent, RefineEvent, Slide } from '@mahmoudhammouda/smart-player';
 
 @Component({
   imports: [SmartPlayerComponent],
@@ -545,7 +549,7 @@ import type {
   ValidationIssue,
   ValidationSeverity,
   NodeValidator,
-} from 'smart-player';
+} from '@mahmoudhammouda/smart-player';
 ```
 
 ---

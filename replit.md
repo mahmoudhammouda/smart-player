@@ -10,6 +10,7 @@ A distributable Angular 19+ library package (`smart-player`) that renders struct
 - **Library**: Angular 19 standalone components with signals (`input()`, `signal()`, `output()`, `viewChild()`, `afterRender()`)
 - **Demo**: Angular 19 standalone app with routing, sidebar navigation, dark mode
 - **Build**: `ng build smart-player` produces an npm-distributable package in `dist/smart-player/`
+- **Publishing**: Scoped package `@mahmoudhammouda/smart-player` published to GitHub Packages via `.github/workflows/publish.yml` (triggers on GitHub Release)
 - **UI Pattern**: Continuous Document — no card borders/shadows; text flows naturally; code/math/diagrams are embedded blocks; actions appear on hover (Ghost UI)
 
 ## Key Features

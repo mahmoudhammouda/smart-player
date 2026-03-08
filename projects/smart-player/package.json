@@ -1,14 +1,28 @@
 {
-  "name": "smart-player",
+  "name": "@mahmoudhammouda/smart-player",
   "version": "1.0.0",
   "description": "Angular library for rendering LLM-generated educational content. Supports text, math (KaTeX), code (Highlight.js), diagrams (Mermaid), and interactive sandboxes.",
-  "keywords": ["angular", "lms", "content-player", "katex", "mermaid", "highlight.js", "educational"],
+  "keywords": ["angular", "lms", "content-player", "katex", "mermaid", "highlight.js", "educational", "llm", "slides"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mahmoudhammouda/smart-player.git"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "peerDependencies": {
     "@angular/common": "^19.0.0",
     "@angular/core": "^19.0.0",
     "katex": "^0.16.0",
     "mermaid": "^11.0.0",
-    "highlight.js": "^11.0.0"
+    "highlight.js": "^11.0.0",
+    "zod": "^3.20.0"
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
   },
   "dependencies": {
     "tslib": "^2.3.0"
