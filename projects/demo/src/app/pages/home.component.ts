@@ -27,13 +27,37 @@ import { MOCK_SCENARIOS } from '../data/mock-scenarios';
           Drop it into any Angular 19+ app in minutes.
         </p>
 
-        <div class="install-box">
-          <span class="install-dollar">$</span>
-          <code class="install-cmd">npm install smart-player</code>
-          <button class="copy-btn" (click)="copy('npm install smart-player', $event)" title="Copy">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-            @if (copied()) { <span style="font-size:0.7rem">Copied!</span> }
-          </button>
+        <div class="install-steps">
+          <div class="install-step">
+            <span class="install-step-num">1</span>
+            <span class="install-step-label">Téléchargez le package</span>
+          </div>
+          <a class="btn btn-download" href="/smart-player.tar.gz" download="smart-player.tar.gz" data-testid="link-download-package">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            smart-player.tar.gz
+            <span class="download-size">(85 Ko)</span>
+          </a>
+
+          <div class="install-step">
+            <span class="install-step-num">2</span>
+            <span class="install-step-label">Extrayez et installez dans votre projet</span>
+          </div>
+          <div class="install-box">
+            <span class="install-dollar">$</span>
+            <code class="install-cmd">tar xzf smart-player.tar.gz -C ./smart-player</code>
+            <button class="copy-btn" (click)="copy('tar xzf smart-player.tar.gz -C ./smart-player', $event)" title="Copy">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              @if (copied()) { <span style="font-size:0.7rem">Copied!</span> }
+            </button>
+          </div>
+          <div class="install-box">
+            <span class="install-dollar">$</span>
+            <code class="install-cmd">npm install ./smart-player</code>
+            <button class="copy-btn" (click)="copy('npm install ./smart-player', $event)" title="Copy">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              @if (copied()) { <span style="font-size:0.7rem">Copied!</span> }
+            </button>
+          </div>
         </div>
 
         <div class="hero-actions">
@@ -73,10 +97,11 @@ import { MOCK_SCENARIOS } from '../data/mock-scenarios';
           <div class="step">
             <div class="step-number">1</div>
             <div class="step-body">
-              <h3 class="step-title">Install the package</h3>
+              <h3 class="step-title">Download &amp; install the package</h3>
               <div class="code-block">
                 <div class="code-label">Terminal</div>
-                <pre class="code-pre"><code>npm install smart-player</code></pre>
+                <pre class="code-pre"><code>tar xzf smart-player.tar.gz -C ./smart-player
+npm install ./smart-player</code></pre>
               </div>
             </div>
           </div>
@@ -370,6 +395,69 @@ export const appConfig = &#123;
     .copy-btn:hover {
       background: var(--muted, #f1f5f9);
       color: var(--fg, #1e293b);
+    }
+
+    .install-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .install-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .install-step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent, #3b82f6);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .install-step-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--fg, #1e293b);
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      color: white;
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+      justify-content: center;
+    }
+
+    .btn-download:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+    }
+
+    .download-size {
+      font-size: 0.72rem;
+      font-weight: 400;
+      opacity: 0.8;
     }
 
     .hero-actions {
@@ -932,6 +1020,8 @@ export const appConfig = &#123;
     :host-context(.dark) .demo-card { background: #1e293b; border-color: #334155; }
     :host-context(.dark) .install-box { background: #1e293b; border-color: #334155; }
     :host-context(.dark) .install-cmd { color: #e2e8f0; }
+    :host-context(.dark) .install-step-label { color: #e2e8f0; }
+    :host-context(.dark) .btn-download { box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3); }
     :host-context(.dark) .extend-section { background: color-mix(in srgb, #3b82f6 8%, #1e293b); }
     :host-context(.dark) .extend-title { color: #f1f5f9; }
     :host-context(.dark) .api-table-wrap { border-color: #334155; }
