@@ -5,21 +5,28 @@ import {
 import { SlideNode } from '../../models/slide.model';
 import { ValidationIssue } from '../../validation/types';
 import { validateChemicalStructure } from '../../validation/node-validators';
+import { LightboxComponent } from '../lightbox/lightbox.component';
 
 @Component({
   selector: 'sp-chemical-structure-node',
   standalone: true,
+  imports: [LightboxComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="sp-chemical-block">
       @if (error()) {
         <div class="sp-chemical-error">
-          <span class="sp-chemical-error-label">⚠ Render error</span>
+          <span class="sp-chemical-error-label">\u26A0 Render error</span>
           <pre class="sp-chemical-error-text">{{ error() }}</pre>
         </div>
       }
       <div class="sp-chemical-container" [class.hidden]="!!error()">
-        <div #svgContainer class="sp-svg-host" data-testid="canvas-chemical-structure"></div>
+        <div class="sp-chemical-wrapper" (click)="openLightbox()" data-testid="chemical-zoom-trigger">
+          <div class="sp-chemical-zoom-hint">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+          </div>
+          <div #svgContainer class="sp-svg-host" data-testid="canvas-chemical-structure"></div>
+        </div>
         @if (node().meta?.['name']) {
           <div class="sp-chemical-name" data-testid="text-chemical-name">
             {{ node().meta?.['name'] }}
@@ -27,6 +34,7 @@ import { validateChemicalStructure } from '../../validation/node-validators';
         }
       </div>
     </div>
+    <sp-lightbox #lightbox />
   `,
   styles: [`
     :host { display: block; }
@@ -51,6 +59,35 @@ import { validateChemicalStructure } from '../../validation/node-validators';
 
     .sp-chemical-container.hidden {
       display: none;
+    }
+
+    .sp-chemical-wrapper {
+      position: relative;
+      cursor: zoom-in;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .sp-chemical-zoom-hint {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      z-index: 2;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.06);
+      color: var(--sp-muted-fg, #94a3b8);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .sp-chemical-wrapper:hover .sp-chemical-zoom-hint {
+      opacity: 1;
     }
 
     .sp-svg-host {
@@ -102,11 +139,24 @@ export class ChemicalStructureNodeComponent {
   node = input.required<SlideNode>();
   error = signal<string | null>(null);
   svgContainer = viewChild<ElementRef<HTMLDivElement>>('svgContainer');
+  lightbox = viewChild<LightboxComponent>('lightbox');
 
   constructor() {
     afterNextRender(() => {
       this.render();
     });
+  }
+
+  openLightbox(): void {
+    const container = this.svgContainer()?.nativeElement;
+    const svg = container?.querySelector('svg');
+    if (svg) {
+      this.lightbox()?.open({
+        type: 'html',
+        htmlElement: svg,
+        caption: (this.node().meta?.['name'] as string) ?? undefined,
+      });
+    }
   }
 
   private async render(): Promise<void> {
