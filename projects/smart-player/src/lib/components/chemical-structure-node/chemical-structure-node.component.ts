@@ -110,26 +110,29 @@ export class ChemicalStructureNodeComponent {
     if (!canvasEl || !smiles) return;
 
     try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const SD = await import('smiles-drawer');
       const SmilesDrawer = SD.default ?? SD;
-
       const options = { width: 300, height: 220 };
 
       if (SmilesDrawer.SmiDrawer) {
         const drawer = new SmilesDrawer.SmiDrawer(options);
+        drawer.draw(
+          smiles,
+          canvasEl,
+          theme,
+          () => { this.error.set(null); },
+          (err: unknown) => { this.error.set(String(err)); }
+        );
+      } else if (SmilesDrawer.Drawer) {
+        const drawer = new SmilesDrawer.Drawer(options);
         SmilesDrawer.parse(
           smiles,
           (tree: unknown) => { drawer.draw(tree, canvasEl, theme, false); this.error.set(null); },
           (err: unknown) => { this.error.set(String(err)); }
         );
-      } else if (typeof SmilesDrawer === 'function') {
-        const drawer = new SmilesDrawer(options);
-        drawer.draw(smiles, canvasEl);
-        this.error.set(null);
       } else {
-        this.error.set('SmilesDrawer API not recognised.');
+        this.error.set('SmilesDrawer API non reconnue.');
       }
     } catch (e: unknown) {
       this.error.set(e instanceof Error ? e.message : 'Render failed');

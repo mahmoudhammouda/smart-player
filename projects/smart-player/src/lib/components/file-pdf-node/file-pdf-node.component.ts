@@ -105,7 +105,15 @@ export class FilePdfNodeComponent {
   height = computed(() => Number(this.node().meta?.['height']) || 600);
 
   safeSrc = computed<SafeResourceUrl>(() => {
-    const url = this.node().content;
+    const rawUrl = String(this.node().content || '');
+    const viewer = (this.node().meta?.['viewer'] as string) ?? 'auto';
+
+    let url: string;
+    if (viewer === 'google') {
+      url = `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}&embedded=true`;
+    } else {
+      url = rawUrl;
+    }
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   });
 

@@ -716,7 +716,7 @@ for name, au in planets.items():
           type: 'file-pdf',
           label: 'Sample PDF Document',
           content: 'https://www.w3.org/WAI/WCAG21/wcag-2.1.pdf',
-          meta: { height: 500, title: 'WCAG 2.1 Guidelines' },
+          meta: { height: 500, title: 'WCAG 2.1 Guidelines', viewer: 'google' },
         },
         {
           id: 'nn13',
